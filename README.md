@@ -14,9 +14,9 @@ This is an app that allows the user to discover bands playing in their area and 
 - [Foundation](https://foundation.zurb.com/)
 - [jQuery](https://jquery.com/download/)
 
-## Check out our creators' other projects at:
+## Check Out our Creators' Other Projects At:
 - [Hunter Wilkins](https://github.com/HunterWilkins)
-- [Mary Dang](https://github.com/mkd454?tab=repositories)
+- [Mary Dang](https://github.com/mkd454)
 - [Kat Gordon](https://github.com/Katgordon)
 - [Eric Chao](https://github.com/echao2012)
 
