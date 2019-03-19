@@ -25,7 +25,6 @@ body {
     margin-bottom:15px;
 }
 
-
 .text-box {
     background:rgb(81, 119, 125);
     color: rgb(204, 219, 230);
@@ -38,8 +37,6 @@ body {
     box-shadow:none;
     border:rgb(122, 231, 202) solid 1px;
 }
-
-
 
 #search-button{
     background:rgb(73, 117, 120);
@@ -60,8 +57,6 @@ body {
     font-size:18px;
 
 }
-
-
 
 .concert-div {
     display: inline-block;
