@@ -5,6 +5,7 @@
 body {
     background:rgb(32, 29, 54);
     color: rgb(156, 217, 243);
+    margin-bottom: 100px;
 }
 
 .box {
@@ -33,7 +34,8 @@ body {
 }
 
 .text-box:focus{
-    background:rgb(99, 147, 140);
+    background:rgb(53, 73, 91);
+    box-shadow:none;
 }
 
 .text-box:active{
@@ -63,7 +65,7 @@ body {
 footer {
     width:100%;
     background:rgb(36, 54, 66);
-    padding:15px;
+    padding:5px;
     text-align:center;
     position:fixed;
     bottom:0;
@@ -97,4 +99,6 @@ footer {
 
 .concert-img {
     max-width: 200px;
+    border-radius: 5px;
+    border: inherit solid;
 }

@@ -31,7 +31,7 @@ $(document).ready(function () {
                 concertList = [];
 
                 // TODO: Clear the UI
-                $(".results-box").empty();
+                $("#concert-info").empty();
             }
 
             // Keep track of which index we are on
@@ -72,7 +72,7 @@ $(document).ready(function () {
                 textDiv.append(dateP);
 
                 // TODO: Append to the concert list container
-                $(".results-box").append(concertDiv);
+                $("#concert-info").append(concertDiv);
             });
 
             // Append the new data to the list of concerts
