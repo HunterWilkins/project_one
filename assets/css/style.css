@@ -3,17 +3,27 @@
 }
 
 body {
-    background:rgb(41, 60, 76);
-    color: rgb(204, 219, 230);
+    background:rgb(32, 29, 54);
+    color: rgb(156, 217, 243);
 }
 
 .box {
-    background:rgb(56,87,99);
+    background:rgb(62, 56, 99);
     padding:15px;
     border-radius:8px;
-    border:rgb(73, 117, 120) solid;
+    border:rgb(108, 73, 120) solid;
+    margin-bottom:15px;
+    color: rgb(202, 146, 195);
+}
+
+.search-box {
+    background:rgb(51, 96, 106);
+    padding:15px;
+    border-radius:8px;
+    border:rgb(80, 141, 142) solid;
     margin-bottom:15px;
 }
+
 
 .text-box {
     background:rgb(81, 119, 125);
@@ -30,11 +40,24 @@ body {
     box-shadow: 0 0 5px rgb(99, 147, 140);
 }
 
-.results-box {
-    background:rgb(56,87,99);
-    padding:15px;
-    border-radius:8px;
-    border:rgb(73, 117, 120) solid;
+#search-button{
+    background:rgb(73, 117, 120);
+    padding:10px;
+    width:50%;
+    margin:0 25% 0 25%;
+    color: rgb(204, 219, 230);
+    font-size:16px;
+
+    transition: background .25s, box-shadow .25s, font-size .25s, padding .25s;
+}
+
+#search-button:hover{
+    cursor:pointer;
+    background: rgb(99, 147, 140);
+    box-shadow:0 0 5px rgb(122, 231, 202);
+
+    font-size:18px;
+
 }
 
 footer {
