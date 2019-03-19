@@ -22,7 +22,7 @@ $(document).ready(function () {
                      + "&city=" + city
                      + "&stateCode=" + stateCode
                      + "&page=" + page
-                     + "&sort=date%2Casc&classificationName=music";
+                     + "&sort=date%2Casc&classificationName=music&classificationID=KZFzniwnSyZfZ7v7nJ";
 
         $.get(queryUrl).then(function(response) {
             // Clear the old info if this is the first page
@@ -30,8 +30,8 @@ $(document).ready(function () {
                 // Clear the data
                 concertList = [];
 
-                // TODO: Clear the UI
-                $(".results-box").empty();
+                // Clear the UI
+                $("#concert-info").empty();
             }
 
             // Keep track of which index we are on
@@ -51,8 +51,15 @@ $(document).ready(function () {
                 // Create an img
                 var img = $("<img>");
                 img.addClass("concert-img");
-                img.attr("src", concert.images[1].url);
-                concertDiv.append(img);
+
+                // Find the image url with 4:3 ratio
+                for(var i = 0; i < concert.images.length; i++) {
+                    if(concert.images[i].ratio === "4_3") {
+                        img.attr("src", concert.images[i].url);
+                        concertDiv.append(img);
+                        break;
+                    }
+                }
 
                 // Create a div to hold text that overlays the image
                 var textDiv = $("<div>");
@@ -71,8 +78,8 @@ $(document).ready(function () {
                 dateP.text(concert.dates.start.localDate);
                 textDiv.append(dateP);
 
-                // TODO: Append to the concert list container
-                $(".results-box").append(concertDiv);
+                // Append to the concert list container
+                $("#concert-info").append(concertDiv);
             });
 
             // Append the new data to the list of concerts
