@@ -3,7 +3,7 @@
 }
 
 body {
-    background:rgb(32, 29, 54);
+    background:rgb(39, 38, 52);
     color: rgb(156, 217, 243);
     margin-bottom: 100px;
 }
@@ -30,17 +30,16 @@ body {
     background:rgb(81, 119, 125);
     color: rgb(204, 219, 230);
     border:none;
-    transition:background .25s;
+    transition:background .25s, border .25s;
 }
 
 .text-box:focus{
     background:rgb(53, 73, 91);
     box-shadow:none;
+    border:rgb(122, 231, 202) solid 1px;
 }
 
-.text-box:active{
-    box-shadow: 0 0 5px rgb(99, 147, 140);
-}
+
 
 #search-button{
     background:rgb(73, 117, 120);
@@ -62,20 +61,16 @@ body {
 
 }
 
-footer {
-    width:100%;
-    background:rgb(36, 54, 66);
-    padding:5px;
-    text-align:center;
-    position:fixed;
-    bottom:0;
-    left:0;
-}
+
 
 .concert-div {
     display: inline-block;
     position: relative;
     margin: 10px;
+}
+
+.concert-div:hover{
+    cursor:pointer;
 }
 
 .concert-text-div {
@@ -101,4 +96,14 @@ footer {
     max-width: 200px;
     border-radius: 5px;
     border: inherit solid;
+}
+
+footer {
+    width:100%;
+    background:rgb(36, 54, 66);
+    padding:5px;
+    text-align:center;
+    position:fixed;
+    bottom:0;
+    left:0;
 }
