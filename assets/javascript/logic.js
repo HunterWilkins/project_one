@@ -23,11 +23,11 @@ $(document).ready(function () {
     // Get a list of concerts performing in the provided city
     function getConcerts(city, stateCode, page) {
         var apiKey = "JviGs3zVAQltfcvyy3z0DWiOA7vrRa8d";
-        var queryUrl = "https://app.ticketmaster.com/discovery/v2/events.json?apikey=" + apiKey +
+        var queryUrl = "https://app.ticketmaster.com/discovery/v2/events?apikey=" + apiKey +
             "&city=" + city +
             "&stateCode=" + stateCode +
             "&page=" + page +
-            "&sort=date%2Casc&classificationName=music";
+            "&sort=date%2Casc&classificationId=KZFzniwnSyZfZ7v7nJ";
 
         $.get(queryUrl).then(function (response) {
             // Clear the old info if this is the first page
@@ -35,7 +35,7 @@ $(document).ready(function () {
                 // Clear the data
                 concertList = [];
 
-                // TODO: Clear the UI
+                // Clear the UI
                 $("#concert-info").empty();
             }
 
@@ -89,7 +89,7 @@ $(document).ready(function () {
                 dateP.text(concert.dates.start.localDate);
                 textDiv.append(dateP);
 
-                // TODO: Append to the concert list container
+                // Append to the concert list container
                 $("#concert-info").append(concertDiv);
             });
 
