@@ -1,0 +1,48 @@
+*{
+    transition:width .25s;
+}
+
+body {
+    background:rgb(41, 60, 76);
+    color: rgb(204, 219, 230);
+}
+
+.search-box {
+    background:rgb(56,87,99);
+    padding:15px;
+    border-radius:8px;
+    border:rgb(73, 117, 120) solid;
+    margin-bottom:15px;
+}
+
+.text-box {
+    background:rgb(81, 119, 125);
+    color: rgb(204, 219, 230);
+    border:none;
+    transition:background .25s;
+}
+
+.text-box:focus{
+    background:rgb(99, 147, 140);
+}
+
+.text-box:active{
+    box-shadow: 0 0 5px rgb(99, 147, 140);
+}
+
+.results-box {
+    background:rgb(56,87,99);
+    padding:15px;
+    border-radius:8px;
+    border:rgb(73, 117, 120) solid;
+}
+
+footer {
+    width:100%;
+    background:rgb(36, 54, 66);
+    padding:15px;
+    text-align:center;
+    position:fixed;
+    bottom:0;
+    left:0;
+}
