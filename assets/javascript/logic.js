@@ -3,6 +3,18 @@ $(document).ready(function () {
     // Holds the list of concerts
     var concertList = [];
 
+    // $("#").on("click", function(event) {
+    //     var cityState = $("#").val().split();
+    //     getConcerts(cityState[0], cityState[1], 0);
+    // })
+
+    $(document).keyup(function (e) {
+        if ($(".text-box").is(":focus") && (e.keyCode == 13)) {
+            var cityState = $(".text-box").val().split(",");
+            getConcerts(cityState[0].trim(), cityState[1].trim(), 0);
+        }
+    });
+
     // Get a list of concerts performing in the provided city
     function getConcerts(city, stateCode, page) {
         var apiKey = "JviGs3zVAQltfcvyy3z0DWiOA7vrRa8d";
@@ -19,6 +31,7 @@ $(document).ready(function () {
                 concertList = [];
 
                 // TODO: Clear the UI
+                $(".results-box").empty();
             }
 
             // Keep track of which index we are on
@@ -33,11 +46,12 @@ $(document).ready(function () {
                 var concertDiv = $("<div>");
                 concertDiv.addClass("concert-div");
                 concertDiv.attr("data-index", iConcert);
+                iConcert++;
 
                 // Create an img
                 var img = $("<img>");
                 img.addClass("concert-img");
-                img.attr("src", concert.images[1]);
+                img.attr("src", concert.images[1].url);
                 concertDiv.append(img);
 
                 // Create a div to hold text that overlays the image
@@ -58,6 +72,7 @@ $(document).ready(function () {
                 textDiv.append(dateP);
 
                 // TODO: Append to the concert list container
+                $(".results-box").append(concertDiv);
             });
 
             // Append the new data to the list of concerts

@@ -69,3 +69,32 @@ footer {
     bottom:0;
     left:0;
 }
+
+.concert-div {
+    display: inline-block;
+    position: relative;
+    margin: 10px;
+}
+
+.concert-text-div {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    padding: 10px;
+    color: white;
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+.concert-text-artist {
+    font-weight: bold;
+    margin-bottom: 0;
+}
+
+.concert-text-date {
+    font-size: 14px;
+    margin-bottom: 0;
+}
+
+.concert-img {
+    max-width: 200px;
+}
