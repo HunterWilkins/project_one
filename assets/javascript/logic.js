@@ -12,6 +12,7 @@ $(document).ready(function () {
         if ($(".text-box").is(":focus") && (e.keyCode == 13)) {
             var cityState = $(".text-box").val().split(",");
             getConcerts(cityState[0].trim(), cityState[1].trim(), 0);
+            
         }
     });
 
