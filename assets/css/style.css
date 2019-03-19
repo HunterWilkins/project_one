@@ -1,11 +1,28 @@
-*{
+* {
     transition:width .25s;
+}
+
+
+/* Animations */
+@keyframes colorful {
+    0% {
+        color: rgb(156, 217, 243);
+    }
+
+    50%{
+        color:rgb(231, 122, 216);
+    }
+        
+    100%{
+        color: rgb(156,217,243);
+    }
 }
 
 body {
     background:rgb(39, 38, 52);
     color: rgb(156, 217, 243);
     margin-bottom: 100px;
+    z-index:1;
 }
 
 .box {
@@ -23,13 +40,32 @@ body {
     border-radius:8px;
     border:rgb(80, 141, 142) solid;
     margin-bottom:15px;
+    opacity:.80;
+
+    box-shadow: 0 5px 2px rgb(26, 25, 37, .5);
+
+    transition: box-shadow .25s, opacity, .25s;
 }
 
+.search-box:hover{
+    box-shadow: 0 10px 10px rgb(26, 25, 37);
+    opacity:1;
+}
 .text-box {
     background:rgb(81, 119, 125);
     color: rgb(204, 219, 230);
-    border:none;
+    border:rgb(2,2,2,0) solid 1px;
+    
+    
     transition:background .25s, border .25s;
+}
+
+.text-box::placeholder{
+    color:rgba(209, 225, 236, 0.571);
+}
+
+.text-box:hover{
+    border:rgba(122, 231, 202, 0.476) solid 1px;
 }
 
 .text-box:focus{
