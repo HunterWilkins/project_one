@@ -1,20 +1,26 @@
 $(document).ready(function () {
+    // Search by Artist
+    var artistName = "Britney Spears"; //Change to link up to Eric's code
+    $.get("https://cors-ut-bootcamp.herokuapp.com/https://itunes.apple.com/search?term=" + artistName + "&limit=10", function (res) {
+        var artistResult = JSON.parse(res).results;
+        console.log(artistResult);
 
-    function getArtistinfo
-    var = queryURL = "https://itunes.apple.com/search?term=jack+johnson&limit=25";
-         $.get("https://cors-ut-bootcamp.herokuapp.com/https://itunes.apple.com/search?term=artistfirstname+artistlastnme&limit=25", function (res) {
-        console.log(JSON.parse(res));
- //search by artist
-"search?term=firstname+lastname&limit=25"
- //search by album
-"notsurehowtosearchbyalbum"
-        $.get(queryUrl).then(function(response) {
-    // Clear the old info if this is the first page
-    if(page === "0") {
-    // Clear the data
-    concertList = [];
-    
-    
-    
+        //Grab the artist ID
+        var artistID = artistResult[0].artistId;
+        console.log(artistID);
+
+        // Search Artist Album
+        // First replace the querylink with updated artistID
+        $.get("https://cors-ut-bootcamp.herokuapp.com/https://itunes.apple.com/lookup?id="+artistID+"&entity=album&limit=5", function (response) {
+            var updatedArtist = JSON.parse(response).results;    
+            console.log(updatedArtist);
+
+
+        })
+
+        // Create divs for 
+
+
     });
-         });
+
+});

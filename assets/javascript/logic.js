@@ -62,7 +62,6 @@ $(document).ready(function () {
                     }
                 }
 
-<<<<<<< HEAD
                         // Create a div to hold text that overlays the image
                         var textDiv = $("<div>");
                         textDiv.addClass("concert-text-div");
@@ -81,77 +80,13 @@ $(document).ready(function () {
                         textDiv.append(dateP);
 
                         // TODO: Append to the concert list container
-                        $(".results-box").append(concertDiv);
+                        $("#concert-info").append(concertDiv);
                     });
 
                     // Append the new data to the list of concerts
                     concertList = concertList.concat(newConcertList);
                 })
             }
-
-            //maybe write a function here 
-            var artistName = "Britney Spears";
-            $.get("https://cors-ut-bootcamp.herokuapp.com/https://itunes.apple.com/search?term="+artistName+"&limit=25", function (res) {
-             
-            
-               console.log(JSON.parse(res));
-=======
-                // Create a div to hold text that overlays the image
-                var textDiv = $("<div>");
-                textDiv.addClass("concert-text-div");
-                concertDiv.append(textDiv);
-
-                // Create a p for the artist name
-                var artistP = $("<p>");
-                artistP.addClass("concert-text-artist");
-                artistP.text(concert.name);
-                textDiv.append(artistP);
-
-                // Create a p for the date
-                var dateP = $("<p>");
-                dateP.addClass("concert-text-date");
-                dateP.text(concert.dates.start.localDate);
-                textDiv.append(dateP);
-
-                // Append to the concert list container
-                $("#concert-info").append(concertDiv);
-              
-              //function getArtistinfo
-            var queryURL = "https://itunes.apple.com/search?term=jack+johnson&limit=25";
-            $.get("https://cors-ut-bootcamp.herokuapp.com/https://itunes.apple.com/search?term=artistfirstname+artistlastnme&limit=25", function (res) {
-                    console.log(JSON.parse(res));
-                    //search by artist
-                    // "search?term=firstname+lastname&limit=25"
-                    //search by album
-                    // "notsurehowtosearchbyalbum"
-                    $.get(queryURL).then(function (response) {
-                            // Clear the old info if this is the first page
-                            if (page === "0") {
-                                // Clear the data
-                                concertList = [];
-                            }
->>>>>>> origin
-
-               var artistResult = JSON.parse(res).results;
-               console.log(artistResult);
-                //search by artist
-                // "search?term=firstname+lastname&limit=25"
-                //search by album
-                // "notsurehowtosearchbyalbum"
-                // $.get(queryURL).then(function (response) {
-                //         // Clear the old info if this is the first page
-                //         if (page === "0") {
-                //             // Clear the data
-                //             concertList = [];
-                        
-                //         }
-
-
-
-
-
-                // });
-            });
 
 
 
