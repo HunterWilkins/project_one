@@ -2,7 +2,6 @@ $(document).ready(function () {
 
     // Holds the list of concerts
     var concertList = [];
-    var artistIds = [];
 
     // Initialize the autocomplete city search
     var autocompleteOpt = {
@@ -49,7 +48,6 @@ $(document).ready(function () {
             if (page === 0) {
                 // Clear the data
                 concertList = [];
-                artistIds = [];
 
                 // Clear the UI
                 $("#concert-info").empty();
@@ -63,9 +61,6 @@ $(document).ready(function () {
 
             // Append new data to the UI
             newConcertList.forEach(getITunesId);
-
-            // Append the new data to the list of concerts
-            concertList = concertList.concat(newConcertList);
         });
     }
 
@@ -138,8 +133,11 @@ $(document).ready(function () {
                     if(response.relations[i].url.resource.includes("itunes.apple.com")) {
                         var url = response.relations[i].url.resource;
                         var id = url.substring(url.indexOf("/id") + 3);
-                        if(artistIds.indexOf(id) < 0) {
-                            artistIds.push(id);
+
+                        // Check that this is not a duplicate
+                        if (concertList.map(function(e) { return e.name; }).indexOf(concertInfo.name) < 0) {
+                            // Append the new data to the list of concerts
+                            concertList.push(concertInfo);
                             addConcertToUI(concertInfo);
                         }
                     }
@@ -161,8 +159,11 @@ $(document).ready(function () {
                     if(response.resultCount > 0) {
                         if(response.results[0].artistName === artistName) {
                             var id = response.results[0].artistId.toString();
-                            if(artistIds.indexOf(id) < 0) {
-                                artistIds.push(id);
+
+                            // Check that this is not a duplicate
+                            if (concertList.map(function(e) { return e.name; }).indexOf(concertInfo.name) < 0) {
+                                // Append the new data to the list of concerts
+                                concertList.push(concertInfo);
                                 addConcertToUI(concertInfo);
                             }
                         }
