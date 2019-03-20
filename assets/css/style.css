@@ -19,28 +19,29 @@
 }
 
 body {
-    background:rgb(39, 38, 52);
-    color: rgb(156, 217, 243);
+    background:rgb(10, 3, 3);
+    color: rgb(236, 73, 73);
     margin-bottom: 100px;
     z-index:1;
 }
 
 .box {
-    background:rgb(62, 56, 99);
+    background:rgb(89, 56, 99);
     padding:15px;
     border-radius:8px;
-    border:rgb(108, 73, 120) solid;
+    border:rgb(151, 101, 162) solid;
     margin-bottom:15px;
-    color: rgb(202, 146, 195);
+    color: rgb(243, 172, 248);
 }
 
 .search-box {
-    background:rgb(51, 96, 106);
+    background:rgb(117, 44, 44);
     padding:15px;
     border-radius:8px;
-    border:rgb(80, 141, 142) solid;
+    border:rgb(204, 86, 65) solid;
     margin-bottom:15px;
-    opacity:.80;
+    
+    color: rgb(255, 184, 137);
 
     box-shadow: 0 5px 2px rgb(26, 25, 37, .5);
 
@@ -49,11 +50,12 @@ body {
 
 .search-box:hover{
     box-shadow: 0 10px 10px rgb(26, 25, 37);
-    opacity:1;
+   
 }
+
 .text-box {
-    background:rgb(81, 119, 125);
-    color: rgb(204, 219, 230);
+    background:rgb(125, 81, 81);
+    color: rgb(230, 209, 204);
     border:rgb(2,2,2,0) solid 1px;
     
     
@@ -61,25 +63,25 @@ body {
 }
 
 .text-box::placeholder{
-    color:rgba(209, 225, 236, 0.571);
+    color:rgba(236, 209, 209, 0.571);
 }
 
 .text-box:hover{
-    border:rgba(122, 231, 202, 0.476) solid 1px;
+    border:rgba(231, 178, 122, 0.476) solid 1px;
 }
 
 .text-box:focus{
-    background:rgb(53, 73, 91);
+    background:rgb(91, 53, 61);
     box-shadow:none;
-    border:rgb(122, 231, 202) solid 1px;
+    border:rgb(231, 157, 122) solid 1px;
 }
 
 #search-button{
-    background:rgb(73, 117, 120);
+    background:rgb(148, 63, 63);
     padding:10px;
     width:50%;
     margin:0 25% 0 25%;
-    color: rgb(204, 219, 230);
+    color: rgb(230, 204, 204);
     font-size:16px;
 
     transition: background .25s, box-shadow .25s, font-size .25s, padding .25s;
@@ -87,8 +89,8 @@ body {
 
 #search-button:hover{
     cursor:pointer;
-    background: rgb(99, 147, 140);
-    box-shadow:0 0 5px rgb(122, 231, 202);
+    background: rgb(182, 100, 93);
+    box-shadow:0 0 5px rgb(231, 166, 122);
 
     font-size:18px;
 
@@ -130,7 +132,8 @@ body {
 
 footer {
     width:100%;
-    background:rgb(36, 54, 66);
+    background:rgb(59, 29, 45);
+    color:rgb(255, 131, 100);
     padding:5px;
     text-align:center;
     position:fixed;
