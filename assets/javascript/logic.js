@@ -3,20 +3,34 @@ $(document).ready(function () {
     // Holds the list of concerts
     var concertList = [];
 
+    // Initialize the autocomplete city search
+    var autocompleteOpt = {
+        types: ['(cities)'],
+        componentRestrictions: {country: "us"}
+    };
+    var autocomplete = new google.maps.places.Autocomplete($("#search-box")[0], autocompleteOpt);
+    google.maps.event.addListener(autocomplete, 'place_changed', searchLocation);
+
     // Search button click event
     $("#search-button").on("click", function(event) {
         searchLocation();
     })
 
-    // Enter key pressed in search box
-    $(document).keyup(function (e) {
-        if ($("#search-box").is(":focus") && (e.keyCode == 13)) {
-            searchLocation();
-        }
-    });
-
     function searchLocation() {
-        var cityState = $("#search-box").val().split(",");
+        var place = autocomplete.getPlace();
+        var cityState;
+        
+        if(place.formatted_address !== undefined) {
+            // Use the Google Places formatted info
+            cityState = place.formatted_address.split(",");
+        } else if($("#search-box").val().indexOf(",") > 0) {
+            // Split by comma
+            cityState = $("#search-box").val().split(",");
+        } else {
+            // Split by space
+            cityState = $("#search-box").val().split(" ");
+        }
+
         getConcerts(cityState[0].trim(), cityState[1].trim(), 0);
     }
 
