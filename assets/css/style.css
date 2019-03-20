@@ -45,7 +45,7 @@ body {
 }
 
 .box {
-    display:none;
+    /* display:none; */
     
     background:linear-gradient(to bottom, rgb(83, 43, 33), rgb(51, 20, 17) );
     padding:15px;
