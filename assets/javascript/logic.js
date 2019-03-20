@@ -2,6 +2,8 @@ $(document).ready(function () {
 
     // Holds the list of concerts
     var concertList = [];
+    var newConcertsNum = 0;
+    var page = 0;
 
     // Initialize the autocomplete city search
     var autocompleteOpt = {
@@ -19,6 +21,7 @@ $(document).ready(function () {
     function searchLocation() {
         var place = autocomplete.getPlace();
         var cityState;
+        page = 0;
         
         if(place.formatted_address !== undefined) {
             // Use the Google Places formatted info
@@ -31,7 +34,14 @@ $(document).ready(function () {
             cityState = $("#search-box").val().split(" ");
         }
 
-        getConcerts(cityState[0].trim(), cityState[1].trim(), 0);
+        getConcerts(cityState[0].trim(), cityState[1].trim(), page);
+
+        // Ensure we have at least 10, but don't get more than 5 pages
+        // while(newConcertsNum < 10 && page < 5) {
+        //     getConcerts(cityState[0].trim(), cityState[1].trim(), page);
+        //     page++;
+        // }
+        // newConcertsNum = 0;
     }
 
     // Get a list of concerts performing in the provided city
@@ -126,8 +136,9 @@ $(document).ready(function () {
         try {
             musicBrainzId = concertInfo._embedded.attractions[0].externalLinks.musicbrainz[0].id;
             // Get the artist name from MusicBrainz
-            var queryUrl = "http://musicbrainz.org/ws/2/artist/" + musicBrainzId + "?inc=url-rels&fmt=json"
-            $.get(queryUrl).then(function (response) {
+            var queryUrl = "https://cors-ut-bootcamp.herokuapp.com/http://musicbrainz.org/ws/2/artist/" + musicBrainzId + "?inc=url-rels&fmt=json"
+            $.get(queryUrl).then(function(response) {
+                // response = JSON.parse(response);
                 // Search each URL for the iTunes url
                 for (var i = 0; i < response.relations.length; i++) {
                     if(response.relations[i].url.resource.includes("itunes.apple.com")) {
@@ -137,6 +148,7 @@ $(document).ready(function () {
                         // Check that this is not a duplicate
                         if (concertList.map(function(e) { return e.name; }).indexOf(concertInfo.name) < 0) {
                             // Append the new data to the list of concerts
+                            newConcertsNum++;
                             concertList.push(concertInfo);
                             addConcertToUI(concertInfo);
                         }
@@ -155,7 +167,7 @@ $(document).ready(function () {
             if(artistName !== undefined) {
                 var queryUrl = "https://cors-ut-bootcamp.herokuapp.com/https://itunes.apple.com/search?term=" + artistName + "&limit=1"
                 $.get(queryUrl, function(response) {
-                    var response = JSON.parse(response);
+                    response = JSON.parse(response);
                     if(response.resultCount > 0) {
                         if(response.results[0].artistName === artistName) {
                             var id = response.results[0].artistId.toString();
@@ -163,6 +175,7 @@ $(document).ready(function () {
                             // Check that this is not a duplicate
                             if (concertList.map(function(e) { return e.name; }).indexOf(concertInfo.name) < 0) {
                                 // Append the new data to the list of concerts
+                                newConcertsNum++;
                                 concertList.push(concertInfo);
                                 addConcertToUI(concertInfo);
                             }
