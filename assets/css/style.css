@@ -18,32 +18,54 @@
     }
 }
 
+@keyframes gradientstuff{
+    0%{
+        background-position:10% 0%
+    }
+
+    100%{
+        background-position: 91% 100%;
+    }
+}
+
+
+
 body {
-    background:rgb(10, 3, 3);
+    background-image: url("http://1.bp.blogspot.com/-2-DSlmrQyks/UqbTTR5wg5I/AAAAAAAABGM/GME-Q34ItBE/s1600/genesis3.jpg");
+    
     color: rgb(236, 73, 73);
     margin-bottom: 100px;
     z-index:1;
+
+    
+}
+
+.web-title h1{
+    text-shadow: 0 0 15px red;
 }
 
 .box {
-    background:rgb(89, 56, 99);
+    display:none;
+    
+    background:linear-gradient(to bottom, rgb(83, 43, 33), rgb(51, 20, 17) );
     padding:15px;
     border-radius:8px;
-    border:rgb(151, 101, 162) solid;
+    border:rgb(150, 75, 52) solid;
     margin-bottom:15px;
-    color: rgb(243, 172, 248);
+    
+    color: rgb(255, 182, 103);
 }
 
 .search-box {
-    background:rgb(117, 44, 44);
+    background:linear-gradient(to bottom right, rgb(142, 34, 34), rgb(90, 32, 42), rgb(66, 23, 53));
     padding:15px;
     border-radius:8px;
-    border:rgb(204, 86, 65) solid;
+    border:rgba(204, 65, 116, 0.53) solid;
     margin-bottom:15px;
     
     color: rgb(255, 184, 137);
 
-    box-shadow: 0 5px 2px rgb(26, 25, 37, .5);
+    box-shadow: 0 0 15px rgb(182, 57, 57);
 
     transition: box-shadow .25s, opacity, .25s;
 }
@@ -54,16 +76,19 @@ body {
 }
 
 .text-box {
-    background:rgb(125, 81, 81);
-    color: rgb(230, 209, 204);
-    border:rgb(2,2,2,0) solid 1px;
+    background:linear-gradient(to right bottom, rgb(105, 35, 35), rgb(59, 29, 45), rgb(76, 24, 59));
+    background-size:200%;
     
+   
+    color:rgb(255, 131, 100);
+    border:rgb(88, 33, 67) solid 1px;
+    border-radius:3px;
     
     transition:background .25s, border .25s;
 }
 
 .text-box::placeholder{
-    color:rgba(236, 209, 209, 0.571);
+    color:rgba(169, 187, 218, 0.571);
 }
 
 .text-box:hover{
@@ -71,26 +96,36 @@ body {
 }
 
 .text-box:focus{
-    background:rgb(91, 53, 61);
+    /* background:linear-gradient(to right bottom, rgb(48, 72, 78), rgb(63, 81, 150), rgb(36, 47, 46)); */
     box-shadow:none;
-    border:rgb(231, 157, 122) solid 1px;
+    border:rgb(88, 32, 22) solid 1px;
+
+
+    animation: gradientstuff 1s forwards;
 }
 
 #search-button{
-    background:rgb(148, 63, 63);
+    background: radial-gradient(rgb(176, 50, 41), rgb(125, 35, 35));
+    background-size:200%;
     padding:10px;
     width:50%;
     margin:0 25% 0 25%;
-    color: rgb(230, 204, 204);
+    color: rgb(255, 218, 179);
     font-size:16px;
+    border-radius: 2px;
+    border: inherit solid 2px;
 
-    transition: background .25s, box-shadow .25s, font-size .25s, padding .25s;
+    box-shadow: 0 5px 5px rgba(41, 24, 14, 0.714);
+
+    transition: background .25s, box-shadow .25s, font-size .25s, padding .25s, color .25s;
 }
 
 #search-button:hover{
     cursor:pointer;
-    background: rgb(182, 100, 93);
-    box-shadow:0 0 5px rgb(231, 166, 122);
+    background: radial-gradient(rgb(194, 50, 40), rgb(149, 36, 36));
+    background-size:200%;
+    color: rgb(255, 218, 179);
+    box-shadow:0 0 5px rgb(231, 55, 55);
 
     font-size:18px;
 
