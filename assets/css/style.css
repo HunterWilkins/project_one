@@ -1,5 +1,6 @@
 * {
     transition:width .25s;
+    outline:none;
 }
 
 
@@ -44,6 +45,16 @@ body {
     text-shadow: 0 0 15px red;
 }
 
+a{
+    color:rgb(213, 107, 207);
+}
+
+a:hover{
+    color:rgb(255, 182, 103);
+}
+
+
+
 .box {
     /* display:none; */
     
@@ -72,7 +83,6 @@ body {
 
 .search-box:hover{
     box-shadow:none;
-   
 }
 
 .text-box {
@@ -163,6 +173,34 @@ body {
 .concert-img {
     border-radius: 5px;
     border: inherit solid;
+}
+
+/* .reveal{
+    padding:0px;
+    margin: auto;
+    background:none;
+    border:none;
+} */
+
+#concert-music-div .modal-content{
+    width:100%;
+    border:none;
+}
+
+.close-button{
+    padding:3px 5px;
+    color:rgb(255, 131, 100);
+    background:rgb(74, 33, 83);
+    border:rgb(82, 34, 115) solid;
+
+    border-radius:3px;
+
+    transition: font-size .25s;
+}
+
+.close-button:hover{
+    color:rgb(255, 172, 124);
+    font-size:40px;
 }
 
 footer {
