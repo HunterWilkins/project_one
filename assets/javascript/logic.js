@@ -126,7 +126,7 @@ $(document).ready(function () {
 
         // Link to ticketmaster for tickets
         var buyTickets = concert.url;
-        var purchaseTicket = $("<a href='"+buyTickets+"'>")
+        var purchaseTicket = $("<a target='_blank' href='"+buyTickets+"'>")
         var buyButton = $("<button class='button'>Purchase Tickets</button>");
         purchaseTicket.append(buyButton);
 
@@ -283,7 +283,7 @@ $(document).ready(function () {
                 var albumInfo = $("<p style='font-size: 14px;'>"+artistName+"<br><i>Rating: "+albumAdvisoryRating+"<br>Album Release Date: "+albumReleaseDate+"<br>Price: $"+albumPrice+"<br></i></p>");
                 newAlbumCol2.append(title,albumInfo);
                 
-                var albumLink = $("<a href='"+albumSongPreviewsLink+"' class='button'>Preview the album</a>");
+                var albumLink = $("<a target='_blank' href='"+albumSongPreviewsLink+"' class='button'>Preview the album</a>");
                 newAlbumRow1.append(newAlbumCol1,newAlbumCol2);
                 $("#concertInfoModal").append(newAlbumRow1,albumLink);
 
@@ -308,7 +308,7 @@ $(document).ready(function () {
                             previewLinks.push(songPreview);
 
                             // Link 10 most recent songs to HTML
-                            var link = $("<a href='"+previewLinks+"'></a>");
+                            var link = $("<a  target='_blank' href='"+previewLinks+"'></a>");
                             var item = $("<li>"+songName+"</li>");
                             link.append(item);
                             TrackList.append(link);
