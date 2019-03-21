@@ -3,8 +3,16 @@ $(document).ready(function () {
 
     // Holds the list of concerts
     var concertList = [];
-    var newConcertsNum = 0;
+
+    // Keep track of total items
     var page = 0;
+    var iConcert = 0;
+    var city, state;
+
+    // Keep track of new items added for each request
+    var newPageRequests = 0;
+    var iNewConcert = 0;
+    var iNewConcertAdded = 0;
 
     // Initialize the autocomplete city search
     var autocompleteOpt = {
@@ -16,11 +24,11 @@ $(document).ready(function () {
 
     // Search button click event
     $("#search-button").on("click", function(event) {
-        $("#concertDiv").attr("style","display:initial");
         searchLocation();
     })
 
     function searchLocation() {
+        $("#concertDiv").attr("style","display:initial");
         var place = autocomplete.getPlace();
         var cityState;
         page = 0;
@@ -36,18 +44,14 @@ $(document).ready(function () {
             cityState = $("#search-box").val().split(" ");
         }
 
-        getConcerts(cityState[0].trim(), cityState[1].trim(), page);
-
-        // Ensure we have at least 10, but don't get more than 5 pages
-        // while(newConcertsNum < 10 && page < 5) {
-        //     getConcerts(cityState[0].trim(), cityState[1].trim(), page);
-        //     page++;
-        // }
-        // newConcertsNum = 0;
+        city = cityState[0].trim();
+        state = cityState[1].trim();
+        getConcerts(city, state, page);
     }
 
     // Get a list of concerts performing in the provided city
     function getConcerts(city, stateCode, page) {
+        iNewConcert = 0
         var apiKey = "JviGs3zVAQltfcvyy3z0DWiOA7vrRa8d";
         var queryUrl = "https://app.ticketmaster.com/discovery/v2/events?apikey=" + apiKey +
             "&city=" + city +
@@ -78,6 +82,10 @@ $(document).ready(function () {
     }
 
     function addConcertToUI(concert, artistId) {
+        // Store the data
+        concertList.push(concert);
+        iNewConcertAdded++;
+
         // Create a div to hold all elements
         var concertDiv = $("<div>");
         concertDiv.addClass("concert-div");
@@ -126,13 +134,81 @@ $(document).ready(function () {
     }
 
     function getITunesId(concertInfo) {
+        // Attempt to get artist ID from Ticketmaster
+        var id = getIdFromTicketmaster(concertInfo);
+
+        if (id === undefined) {
+            // Attempt to get artist ID from MusicBrainz
+            getIdFromMusicbrainz(concertInfo);
+        }
+    }
+
+    function getIdFromTicketmaster(concertInfo) {
+        try {
+            var url = concertInfo._embedded.attractions[0].externalLinks.itunes[0].url;
+            return url.substring(url.indexOf("/id") + 3);
+        } catch(err) {
+            return undefined;
+        }
+    }
+
+    function getIdFromMusicbrainz(concertInfo) {
+        try {
+            // Get the MusicBrainz ID
+            var musicBrainzId = concertInfo._embedded.attractions[0].externalLinks.musicbrainz[0].id;
+            
+            // Query MusicBrainz URL for info
+            var queryUrl = "https://cors-ut-bootcamp.herokuapp.com/http://musicbrainz.org/ws/2/artist/"
+                         + musicBrainzId + "?inc=url-rels&fmt=json"
+            $.get(queryUrl).then(function(response) {
+                // Search each URL for the iTunes url
+                for (var i = 0; i < response.relations.length; i++) {
+                    if(response.relations[i].url.resource.includes("itunes.apple.com")) {
+                        // Get the iTunes artist ID
+                        var url = response.relations[i].url.resource;
+                        return url.substring(url.indexOf("/id") + 3);
+                    }
+                }
+
+                // iTunes artist ID was not found, return the name from MusicBrainz
+                return searchITunesByName(response.name);
+            });
+        } catch(err) {
+            return undefined;
+        }
+    }
+
+    function searchITunesByName(artistName) {
+        try {
+            var queryUrl = "https://cors-ut-bootcamp.herokuapp.com/https://itunes.apple.com/search?term="
+                            + artistName + "&limit=1"
+            $.get(queryUrl, function(response) {
+                response = JSON.parse(response);
+                
+                // Ensure the names match
+                if(response.results[0].artistName === artistName) {
+                    return response.results[0].artistId.toString();
+                }
+            });
+        } catch(err) {
+            return undefined;
+        }
+    }
+
+    function getITunesIdOld(concertInfo) {
         var iTunesUrl, musicBrainzId;
         var artistName = concertInfo.name;
 
         // Check if there is iTunes info in the concert info
         try {
+            // Get the iTunes artist ID
             iTunesUrl = concertInfo._embedded.attractions[0].externalLinks.itunes[0].url;
-            var ArtistId = iTunesUrl.substring(iTunesUrl.indexOf("/id") + 1);
+            var id = iTunesUrl.substring(iTunesUrl.indexOf("/id") + 3);
+
+            // Add info if not a duplicate
+            checkForDupliate(concertInfo, id);
+            checkAddMore();
+            return;
         } catch(err) {
             iTunesUrl = undefined;
         }
@@ -142,26 +218,23 @@ $(document).ready(function () {
             // Get the artist name from MusicBrainz
             var queryUrl = "https://cors-ut-bootcamp.herokuapp.com/http://musicbrainz.org/ws/2/artist/" + musicBrainzId + "?inc=url-rels&fmt=json"
             $.get(queryUrl).then(function(response) {
-                // response = JSON.parse(response);
                 // Search each URL for the iTunes url
                 for (var i = 0; i < response.relations.length; i++) {
                     if(response.relations[i].url.resource.includes("itunes.apple.com")) {
-                        var url = response.relations[i].url.resource
+                        // Get the iTunes artist ID
+                        var url = response.relations[i].url.resource;
+                        var id = url.substring(url.indexOf("/id") + 3);
 
-                        // Check that this is not a duplicate
-                        if (concertList.map(function(e) { return e.name; }).indexOf(concertInfo.name) < 0) {
-                            // Append the new data to the list of concerts
-                            var id = url.substring(url.indexOf("/id") + 3);
-                            newConcertsNum++;
-                            concertList.push(concertInfo);
-                            addConcertToUI(concertInfo, id);
-                        }
+                        // Add info if not a duplicate
+                        checkForDupliate(concertInfo, id);
+                        checkAddMore();
+                        return;
                     }
                 }
-            });
 
-            // iTunes link not found, use artist name from MusicBrainz to search iTunes
-            artistName = response.name;
+                // iTunes link not found, use artist name from MusicBrainz to search iTunes
+                artistName = response.name;
+            });
         } catch(err) {
             musicBrainzId = undefined;
         }
@@ -172,22 +245,49 @@ $(document).ready(function () {
                 var queryUrl = "https://cors-ut-bootcamp.herokuapp.com/https://itunes.apple.com/search?term=" + artistName + "&limit=1"
                 $.get(queryUrl, function(response) {
                     response = JSON.parse(response);
+                    iNewConcert++;
+
                     if(response.resultCount > 0) {
+                        // Ensure the names match
                         if(response.results[0].artistName === artistName) {
-                            // Check that this is not a duplicate
-                            if (concertList.map(function(e) { return e.name; }).indexOf(concertInfo.name) < 0) {
-                                // Append the new data to the list of concerts
-                                var id = response.results[0].artistId.toString();
-                                newConcertsNum++;
-                                concertList.push(concertInfo);
-                                addConcertToUI(concertInfo, id);
-                            }
+                            var id = response.results[0].artistId.toString();
+                            // Add info if not a duplicate
+                            checkForDupliate(concertInfo, id);
+                            return;
                         }
                     }
+
+                    checkAddMore();
                 });
             }
         } catch(err) {
             artistName = undefined;
+        }
+    }
+
+    function checkForDupliate(concertInfo, id) {
+        iNewConcert++;
+
+        if (concertList.map(function(e) { return e.name; }).indexOf(concertInfo.name) < 0) {
+            // Append the new data to the list of concerts
+            addConcertToUI(concertInfo, id);
+            checkAddMore();
+        }
+    }
+
+    function checkAddMore() {
+        console.log(iNewConcert + " | " + iNewConcertAdded + " | " + newPageRequests);
+debugger;
+        // Check if more results should be added
+        if (iNewConcert >= 20 && iNewConcertAdded < 10 && newPageRequests < 5) {
+            // Gone through entire new list, less than 10 were added, and haven't made more than 5 page requests
+            newPageRequests++;
+            page++;
+            getConcerts(city, state, page);
+        } else if (iNewConcert >= 20 && (iNewConcertAdded >= 10 || newPageRequests >= 5)) {
+            // Gone through entire new list, exceeded concerts added or page requests
+            iNewConcertAdded = 0;
+            newPageRequests = 0;
         }
     }
 
