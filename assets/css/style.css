@@ -29,15 +29,15 @@
 }
 
 
-
 body {
-    background-image: url("http://1.bp.blogspot.com/-2-DSlmrQyks/UqbTTR5wg5I/AAAAAAAABGM/GME-Q34ItBE/s1600/genesis3.jpg");
-    
+    background-image: url("../images/Genesis-Background-Edited.png");
+    background-attachment:fixed;
+    background-repeat:no-repeat;
+
+
     color: rgb(236, 73, 73);
     margin-bottom: 100px;
-    z-index:1;
-
-    
+    z-index:1;    
 }
 
 .web-title h1{
@@ -47,10 +47,10 @@ body {
 .box {
     /* display:none; */
     
-    background:linear-gradient(to bottom, rgb(83, 43, 33), rgb(51, 20, 17) );
+    background:linear-gradient(to bottom, rgb(74, 33, 83), rgb(24, 17, 51) );
     padding:15px;
     border-radius:8px;
-    border:rgb(150, 75, 52) solid;
+    border:rgb(122, 43, 164) solid;
     margin-bottom:15px;
     
     color: rgb(255, 182, 103);
@@ -65,23 +65,23 @@ body {
     
     color: rgb(255, 184, 137);
 
-    box-shadow: 0 0 15px rgb(182, 57, 57);
+    box-shadow: 0 0 5px rgb(255, 100, 53);
 
     transition: box-shadow .25s, opacity, .25s;
 }
 
 .search-box:hover{
-    box-shadow: 0 10px 10px rgb(26, 25, 37);
+    box-shadow:none;
    
 }
 
 .text-box {
-    background:linear-gradient(to right bottom, rgb(105, 35, 35), rgb(59, 29, 45), rgb(76, 24, 59));
+    background:linear-gradient(to bottom right, rgb(66, 23, 53), rgb(90, 32, 42), rgb(142, 34, 34));
     background-size:200%;
     
    
     color:rgb(255, 131, 100);
-    border:rgb(88, 33, 67) solid 1px;
+    border:rgb(88, 33, 67) solid 2px;
     border-radius:3px;
     
     transition:background .25s, border .25s;
@@ -115,7 +115,7 @@ body {
     border-radius: 2px;
     border: inherit solid 2px;
 
-    box-shadow: 0 5px 5px rgba(41, 24, 14, 0.714);
+    box-shadow: 0 5px 5px rgba(34, 14, 41, 0.714);
 
     transition: background .25s, box-shadow .25s, font-size .25s, padding .25s, color .25s;
 }
