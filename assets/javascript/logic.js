@@ -1,4 +1,5 @@
 $(document).ready(function () {
+    $(document).foundation();
 
     // Holds the list of concerts
     var concertList = [];
@@ -15,6 +16,7 @@ $(document).ready(function () {
 
     // Search button click event
     $("#search-button").on("click", function(event) {
+        $("#concertDiv").attr("style","display:initial");
         searchLocation();
     })
 
@@ -54,6 +56,7 @@ $(document).ready(function () {
             "&sort=date%2Casc&classificationId=KZFzniwnSyZfZ7v7nJ";
 
         $.get(queryUrl).then(function (response) {
+            console.log(response);
             // Clear the old info if this is the first page
             if (page === 0) {
                 // Clear the data
@@ -83,7 +86,7 @@ $(document).ready(function () {
         iConcert++;
 
         // Create an img
-        var img = $("<img>");
+        var img = $("<img data-open='concertInfoModal'>");
         img.addClass("concert-img");
 
         // Find the image url with 4:3 ratio
@@ -208,7 +211,6 @@ $(document).ready(function () {
                 var albumAdvisoryRating = recentAlbum[1].contentAdvisoryRating;
                 var albumReleaseDate = recentAlbum[1].releaseDate;
                 var albumSongPreviewsLink = recentAlbum[1].collectionViewUrl;
-                var albumTrackCount = recentAlbum[1].trackCount; 
                 
                 // Create functions to hold album playlist
                 $("#playlist").empty();
@@ -219,12 +221,12 @@ $(document).ready(function () {
 
                 var newAlbumCol2 = $("<div class='albumInfo small-9 medium-9 large-9 columns'>");
                 var title = $("<h5>"+albumTitle+"</h5>");
-                var albumInfo = $("<p style='font-size: 14px;'><i>Rating: "+albumAdvisoryRating+"<br>Album Release Date: "+albumReleaseDate+"<br>Price: $"+albumPrice+"<br></i></p>");
+                var albumInfo = $("<p style='font-size: 14px;'>"+artistName+"<br><i>Rating: "+albumAdvisoryRating+"<br>Album Release Date: "+albumReleaseDate+"<br>Price: $"+albumPrice+"<br></i></p>");
+                newAlbumCol2.append(title,albumInfo);
+                
                 var albumLink = $("<a href='"+albumSongPreviewsLink+"' class='button'>Preview the album</a>");
-                newAlbumCol2.append(title,albumInfo,albumLink);
-
                 newAlbumRow1.append(newAlbumCol1,newAlbumCol2);
-                $("#playlist").append(newAlbumRow1);
+                $("#playlist").append(newAlbumRow1,albumLink);
 
                 var newAlbumRow2 = $("<div class='row newAlbumRow'>");
                 var newTracksCol = $("<div class='twelve columns'>");
@@ -237,7 +239,7 @@ $(document).ready(function () {
                     var recentTracks = JSON.parse(tracks).results;
                     var songs = [];
                     var previewLinks = [];
-                    console.log(recentTracks);
+                    // console.log(recentTracks);
 
                     for (var m=1; m<recentTracks.length; m++) {
                         var songName = recentTracks[m].trackName;
@@ -253,8 +255,8 @@ $(document).ready(function () {
                             TrackList.append(link);
                         }
                     }
-                    console.log(songs);
-                    console.log(previewLinks);
+                    // console.log(songs);
+                    // console.log(previewLinks);
 
                     newAlbumRow2.append(newTracksCol);
                     $("#playlist").append(newAlbumRow2);
