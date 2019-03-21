@@ -175,12 +175,12 @@ a:hover{
     border: inherit solid;
 }
 
-.reveal{
+/* .reveal{
     padding:0px;
     margin: auto;
     background:none;
     border:none;
-}
+} */
 
 #concert-music-div .modal-content{
     width:100%;
