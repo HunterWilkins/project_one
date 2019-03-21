@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Ñusic</title>    
-    <!--CDN Links for ZURB Foundation-->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.5.3/css/foundation-float.css">         
+    <!--CDN Link for ZURB Foundation-->
+    <link rel = "stylesheet" href = "https://cdnjs.cloudflare.com/ajax/libs/foundation/6.5.3/css/foundation-float.css">
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
 
@@ -27,13 +27,13 @@
                 <div class="search-box small-centered">
                     Search for Concerts in your Area
                     <input class = "text-box" id = "search-box" type="text" placeholder = "City, ST">
-                    <button  id = "search-button">Search!</button>
+                    <button  id = "search-button">Search</button>
                 </div>
             </div>
         </div>
         
         <!--Results: Concerts-->
-        <div class="row">
+        <div class="row" id="concertDiv" style="display:none">
             <div class="small-10 medium-10 large-8 small-centered columns">
                 <div class = "box text-center" id = "concert-info">
                     <!-- When jQuerying items into here, make the class "concert-content" -->
@@ -41,18 +41,23 @@
             </div>
         </div>
 
+        <!-- Modal -->
+        <div class="reveal" id="concertInfoModal" data-reveal>
+            <!--Results: Playlist-->
+            <div class="row" id="concertMusicDiv">
+                <div class="small-10 large-8 small-centered columns">
+                    
+                    <div class="box modal-content" id ="playlist">
+                        <!-- Append JQUERY items here -->
+                        HELLOOOOOO
+                    </div>
 
-        <!--Results: Playlist-->
-        <div class="row">
-            <div class="small-10 large-8 small-centered columns">
-                
-                <div class="box" id ="playlist">
-                    <!-- When jQuerying items into here, make the class "playlist-content" -->
                 </div>
-
             </div>
+            <button class="close-button" data-close aria-label="Close modal" type="button">
+                <span aria-hidden="true">&times;</span>
+            </button>
         </div>
-
        
         
     </div>
@@ -61,6 +66,7 @@
 
     <!--JavaScript////////////////////////////////////////////////////////-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src = "https://cdnjs.cloudflare.com/ajax/libs/foundation/6.5.3/js/foundation.min.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA_ZHDRqmTMo9pW4F3hzsMhQ3arBqSvScQ&libraries=places"></script>
     <script src = "assets/javascript/logic.js"></script>
 
