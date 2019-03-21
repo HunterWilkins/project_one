@@ -30,8 +30,11 @@
 
 
 body {
-    background-image: url("http://1.bp.blogspot.com/-2-DSlmrQyks/UqbTTR5wg5I/AAAAAAAABGM/GME-Q34ItBE/s1600/genesis3.jpg");
-    
+    background-image: url("../images/Genesis-Background-Edited.png");
+    background-attachment:fixed;
+    background-repeat:no-repeat;
+
+
     color: rgb(236, 73, 73);
     margin-bottom: 100px;
     z-index:1;    
@@ -44,10 +47,10 @@ body {
 .box {
     /* display:none; */
     
-    background:linear-gradient(to bottom, rgb(83, 43, 33), rgb(51, 20, 17) );
+    background:linear-gradient(to bottom, rgb(74, 33, 83), rgb(24, 17, 51) );
     padding:15px;
     border-radius:8px;
-    border:rgb(150, 75, 52) solid;
+    border:rgb(122, 43, 164) solid;
     margin-bottom:15px;
     
     color: rgb(255, 182, 103);
