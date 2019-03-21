@@ -1,5 +1,6 @@
 * {
     transition:width .25s;
+    outline:none;
 }
 
 
@@ -165,6 +166,33 @@ body {
 .concert-img {
     border-radius: 5px;
     border: inherit solid;
+}
+
+.reveal{
+    padding:0px;
+    margin: auto;
+    background:none;
+    border:none;
+}
+
+#concert-music-div .modal-content{
+    width:100%;
+    border:none;
+}
+
+.close-button{
+    padding:3px 5px;
+    color:rgb(255, 131, 100);
+    background:rgb(59, 29, 45);
+    border:2px inherit solid;
+    border-radius:3px;
+
+    transition: font-size .25s;
+}
+
+.close-button:hover{
+    color:rgb(255, 172, 124);
+    font-size:40px;
 }
 
 footer {
