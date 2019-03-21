@@ -97,7 +97,7 @@ $(document).ready(function () {
         for(var i = 0; i < concert.images.length; i++) {
             if(concert.images[i].ratio === "4_3") {
                 imgArtist.attr("src", concert.images[i].url);
-                console.log(concert.images[i].url);
+                // console.log(concert.images[i].url);
                 concertInfoDiv.append(imgArtist);
                 break;
             }
@@ -117,9 +117,7 @@ $(document).ready(function () {
         p.append("<br>Timezone: ",concertTimezone);
 
         // Ticket sale start & end date
-        var ticketSaleStart = concert.sales.public.startDateTime;   
         var ticketSaleEnd = concert.sales.public.endDateTime;
-        p.append("<br>Ticket Sale Start Date: ",ticketSaleStart);
         p.append("<br>Ticket Sale End Date: ",ticketSaleEnd);
 
         concertInfoDiv.append(p);
@@ -131,8 +129,8 @@ $(document).ready(function () {
         purchaseTicket.append(buyButton);
 
         concertInfoDiv.append(purchaseTicket);
-        $("#concertInfoModal").prepend(concertInfoDiv);
-        $("#concertInfoModal").append("<hr>");
+        $("#concertMusicDiv").prepend(concertInfoDiv);
+        $("#concertMusicDiv").append("<hr>");
     }
 
     function addConcertToUI(concert, artistId) {
@@ -250,7 +248,7 @@ $(document).ready(function () {
     }
 
     $("#concert-info").on("click", ".concert-div", function(event){
-        $("#concertInfoModal").empty();
+        $("#concertMusicDiv").empty();
         getTracks($(this).attr("data-artistId"));
         addConcertToModal($(this).attr("data-index"));
     })
@@ -285,7 +283,7 @@ $(document).ready(function () {
                 
                 var albumLink = $("<a target='_blank' href='"+albumSongPreviewsLink+"' class='button'>Preview the album</a>");
                 newAlbumRow1.append(newAlbumCol1,newAlbumCol2);
-                $("#concertInfoModal").append(newAlbumRow1,albumLink);
+                $("#concertMusicDiv").append(newAlbumRow1,albumLink);
 
                 var newAlbumRow2 = $("<div class='row newAlbumRow'>");
                 var newTracksCol = $("<div class='twelve columns'>");
@@ -318,7 +316,7 @@ $(document).ready(function () {
                     // console.log(previewLinks);
 
                     newAlbumRow2.append(newTracksCol);
-                    $("#concertInfoModal").append(newAlbumRow2);
+                    $("#concertMusicDiv").append(newAlbumRow2);
                 });
             });
         });
