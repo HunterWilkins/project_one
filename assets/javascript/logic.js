@@ -56,7 +56,6 @@ $(document).ready(function () {
             "&sort=date%2Casc&classificationId=KZFzniwnSyZfZ7v7nJ";
 
         $.get(queryUrl).then(function (response) {
-            console.log(response);
             // Clear the old info if this is the first page
             if (page === 0) {
                 // Clear the data
@@ -74,6 +73,25 @@ $(document).ready(function () {
 
             // Append new data to the UI
             newConcertList.forEach(getITunesId);
+
+            // Grab concert info for modal display /////////////////////////////
+            // Relevant info needed:
+                // Artist Name - Just get this from Apple Itunes API
+                // Concert Date
+                var concertDate = newConcertList[0].dates.start.localDate;
+                var concertTime = newConcertList[0].dates.start.localTime;
+                var concertTimezone = newConcertList[0].dates.timezone;
+
+                console.log(newConcertList);
+                console.log(concertDate);
+                console.log(concertTime);
+                console.log(concertTimezone);
+                // Band image
+                var bandImg = newConcertList[0].dates.timezone;
+
+                // Ticket sale start & end date
+                // General Info 
+                // Button to ticketmaster
         });
     }
 
