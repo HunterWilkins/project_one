@@ -92,6 +92,7 @@ $(document).ready(function () {
         // Create an img
         var imgArtist = $("<img>");
         imgArtist.addClass("artist-img");
+        imgArtist.attr("style","padding:10px 0");
 
         // Find the image url with 4:3 ratio
         for(var i = 0; i < concert.images.length; i++) {
@@ -102,6 +103,14 @@ $(document).ready(function () {
                 break;
             }
         }
+
+        // Link to ticketmaster for tickets
+        var buyTickets = concert.url;
+        var purchaseTicket = $("<a target='_blank' href='"+buyTickets+"'>")
+        var buyButton = $("<button class='button'>Purchase Tickets</button>");
+        purchaseTicket.append(buyButton);
+
+        concertInfoDiv.append("<br>",purchaseTicket);
 
         // Concert Name
         var concertName = concert.name;
@@ -121,14 +130,6 @@ $(document).ready(function () {
         p.append("<br>Ticket Sale End Date: ",ticketSaleEnd);
 
         concertInfoDiv.append(p);
-
-        // Link to ticketmaster for tickets
-        var buyTickets = concert.url;
-        var purchaseTicket = $("<a target='_blank' href='"+buyTickets+"'>")
-        var buyButton = $("<button class='button'>Purchase Tickets</button>");
-        purchaseTicket.append(buyButton);
-
-        concertInfoDiv.append(purchaseTicket);
         $("#concertMusicDiv").prepend(concertInfoDiv);
         $("#concertMusicDiv").append("<hr>");
     }
