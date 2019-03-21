@@ -74,25 +74,65 @@ $(document).ready(function () {
             // Append new data to the UI
             newConcertList.forEach(getITunesId);
 
-            // Grab concert info for modal display /////////////////////////////
-            // Relevant info needed:
-                // Artist Name - Just get this from Apple Itunes API
-                // Concert Date
-                var concertDate = newConcertList[0].dates.start.localDate;
-                var concertTime = newConcertList[0].dates.start.localTime;
-                var concertTimezone = newConcertList[0].dates.timezone;
-
-                console.log(newConcertList);
-                console.log(concertDate);
-                console.log(concertTime);
-                console.log(concertTimezone);
-                // Band image
-                var bandImg = newConcertList[0].dates.timezone;
-
-                // Ticket sale start & end date
-                // General Info 
-                // Button to ticketmaster
         });
+    }
+
+    function addConcertToModal (index) {
+        var concert = concertList[index];
+        
+        // Create a div to hold all elements
+        var concertInfoDiv = $("<div>");
+        concertInfoDiv.addClass("concert-info-div");
+
+        // Heading for modal
+        var title = $("<h4>Concert Information</h4>");
+        concertInfoDiv.append(title);
+
+        // Relevant info needed:
+        // Create an img
+        var imgArtist = $("<img>");
+        imgArtist.addClass("artist-img");
+
+        // Find the image url with 4:3 ratio
+        for(var i = 0; i < concert.images.length; i++) {
+            if(concert.images[i].ratio === "4_3") {
+                imgArtist.attr("src", concert.images[i].url);
+                console.log(concert.images[i].url);
+                concertInfoDiv.append(imgArtist);
+                break;
+            }
+        }
+
+        // Concert Name
+        var concertName = concert.name;
+        var p = $("<p>");
+        p.text(concertName);
+
+        // Concert Date
+        var concertDate = concert.dates.start.localDate;
+        var concertTime = concert.dates.start.localTime;
+        var concertTimezone = concert.dates.timezone;
+        p.append("<br>Concert Date: ",concertDate);
+        p.append("<br>Concert Time: ",concertTime);
+        p.append("<br>Timezone: ",concertTimezone);
+
+        // Ticket sale start & end date
+        var ticketSaleStart = concert.sales.public.startDateTime;   
+        var ticketSaleEnd = concert.sales.public.endDateTime;
+        p.append("<br>Ticket Sale Start Date: ",ticketSaleStart);
+        p.append("<br>Ticket Sale End Date: ",ticketSaleEnd);
+
+        concertInfoDiv.append(p);
+
+        // Link to ticketmaster for tickets
+        var buyTickets = concert.url;
+        var purchaseTicket = $("<a href='"+buyTickets+"'>")
+        var buyButton = $("<button class='button'>Purchase Tickets</button>");
+        purchaseTicket.append(buyButton);
+
+        concertInfoDiv.append(purchaseTicket);
+        $("#concertInfoModal").prepend(concertInfoDiv);
+        $("#concertInfoModal").append("<hr>");
     }
 
     function addConcertToUI(concert, artistId) {
@@ -210,7 +250,9 @@ $(document).ready(function () {
     }
 
     $("#concert-info").on("click", ".concert-div", function(event){
+        $("#concertInfoModal").empty();
         getTracks($(this).attr("data-artistId"));
+        addConcertToModal($(this).attr("data-index"));
     })
 
     function getTracks(artistID) {
@@ -231,7 +273,6 @@ $(document).ready(function () {
                 var albumSongPreviewsLink = recentAlbum[1].collectionViewUrl;
                 
                 // Create functions to hold album playlist
-                $("#playlist").empty();
                 var newAlbumRow1 = $("<div class='row newAlbumRow'>");
                 var newAlbumCol1 = $("<div class='albumArtCol small-3 medium-3 large-3 columns'>");
                 var albumImg = $("<img src='"+albumArtwork+"' alt=\""+artistName+"\" style=\"display:block;margin:auto;margin-top:10%;\">");
@@ -244,7 +285,7 @@ $(document).ready(function () {
                 
                 var albumLink = $("<a href='"+albumSongPreviewsLink+"' class='button'>Preview the album</a>");
                 newAlbumRow1.append(newAlbumCol1,newAlbumCol2);
-                $("#playlist").append(newAlbumRow1,albumLink);
+                $("#concertInfoModal").append(newAlbumRow1,albumLink);
 
                 var newAlbumRow2 = $("<div class='row newAlbumRow'>");
                 var newTracksCol = $("<div class='twelve columns'>");
@@ -277,7 +318,7 @@ $(document).ready(function () {
                     // console.log(previewLinks);
 
                     newAlbumRow2.append(newTracksCol);
-                    $("#playlist").append(newAlbumRow2);
+                    $("#concertInfoModal").append(newAlbumRow2);
                 });
             });
         });
