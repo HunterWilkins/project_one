@@ -145,11 +145,15 @@ $(document).ready(function () {
 
         // Link to ticketmaster for tickets
         var buyTickets = concert.url;
-        var purchaseTicket = $("<a target='_blank' href='"+buyTickets+"'>")
-        var buyButton = $("<button class='button'>Purchase Tickets</button>");
-        purchaseTicket.append(buyButton);
+        var purchaseTicket = $("<a target='_blank' href='"+buyTickets+"' class = 'button'>Purchase Tickets</a>")
+        
+        //===Turned purchaseTicket into its own button without creating a separate button ==== -Hunter
+        // var buyButton = $("<button class='button'>Purchase Tickets</button>");
+        // purchaseTicket.append(buyButton);
 
         concertInfoDiv.append("<br>",purchaseTicket);
+
+
 
         // Concert Name
         var concertName = concert.name;
@@ -412,7 +416,7 @@ $(document).ready(function () {
                             if(m % 2 == 0) {
                                 var item = $("<li>"+songName+"</li>");
                             } else {
-                                var item = $("<li style='background-color:rgba(0, 0, 0, 0.8)')>"+songName+"</li>");
+                                var item = $("<li class = 'other-song'>"+songName+"</li>");
                             }
                             link.append(item);
                             TrackList.append(link);
