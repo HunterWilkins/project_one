@@ -162,14 +162,19 @@ $(document).ready(function () {
         var prettyConcertDate = moment(concertDate).format("MMMM Do YYYY");
         var concertTime = concert.dates.start.localTime;
         var prettyConcertTime = moment(concertTime,"hh:mm:ss").format("hh:mm a");
-        p.append("Concert Date: ",prettyConcertDate);
-        p.append("<br>Concert Time: ",prettyConcertTime);
+        if (concertDate !== undefined) {
+            p.append("Concert Date: ",prettyConcertDate);
+        }
+        if (concertTime !== undefined) {
+            p.append("<br>Concert Time: ",prettyConcertTime);
+        }
         
         // Ticket sale end date
         var ticketSaleEnd = concert.sales.public.endDateTime;
         var prettyTicketSaleEnd = moment(ticketSaleEnd).format("MMMM Do YYYY, h:mm a");
-
-        p.append("<br>Deadline To Buy Tickets Online: ",prettyTicketSaleEnd);
+        if (ticketSaleEnd !== undefined) {
+            p.append("<br>Deadline To Buy Tickets Online: ",prettyTicketSaleEnd);
+        }
         concertInfoDiv.append(h5,p);
         $("#concertMusicDiv").prepend(concertInfoDiv);
         $("#concertMusicDiv").append("<hr>");
@@ -185,10 +190,11 @@ $(document).ready(function () {
         concertDiv.addClass("concert-div");
         concertDiv.attr("data-index", iConcert);
         concertDiv.attr("data-artistId", artistId);
+        concertDiv.attr("data-open", "concertInfoModal");
         iConcert++;
 
         // Create an img
-        var img = $("<img data-open='concertInfoModal'>");
+        var img = $("<img>");
         img.addClass("concert-img");
 
         // Find the image url with 4:3 ratio
@@ -378,7 +384,6 @@ $(document).ready(function () {
                 $.get("https://cors-ut-bootcamp.herokuapp.com/https://itunes.apple.com/lookup?id="+artistID+"&entity=song&limit=20&sort=recent", function(tracks) {
                     var recentTracks = JSON.parse(tracks).results;
                     var songs = [];
-                    var previewLinks = [];
                     // console.log(recentTracks);
 
                     for (var m=1; m<recentTracks.length; m++) {
@@ -386,10 +391,9 @@ $(document).ready(function () {
                         var songPreview = recentTracks[m].trackViewUrl;
                         if (songs.length < 10 && songs.indexOf(songName) < 0) {
                             songs.push(songName);
-                            previewLinks.push(songPreview);
 
                             // Link 10 most recent songs to HTML
-                            var link = $("<a  target='_blank' href='"+previewLinks+"'></a>");
+                            var link = $("<a  target='_blank' href='"+songPreview+"'></a>");
                             var item = $("<li>"+songName+"</li>");
                             link.append(item);
                             TrackList.append(link);
