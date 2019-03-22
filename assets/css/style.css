@@ -45,7 +45,10 @@
     }
 }
 
-
+hr {
+    border-bottom:none;
+    border: rgba(159, 48, 193, 0.517) solid 1px;
+}
 
 html{
     
