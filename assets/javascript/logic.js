@@ -34,14 +34,14 @@ $(document).ready(function () {
         searchLocation();
     });
 
-    // // Load more if scrolled to bottom
+    // Load more if scrolled to bottom
     var throttleTimer = null;
-    $(window).off('scroll', ScrollHandler).on('scroll', ScrollHandler);
+    $("#concert-info").off('scroll', ScrollHandler).on('scroll', ScrollHandler);
 
     function ScrollHandler(e) {
         clearTimeout(throttleTimer);
         throttleTimer = setTimeout(function () {
-            if (($(window).scrollTop() + $(window).height() > $(document).height() - 100) && moreResults) {
+            if (($("#concert-info").scrollTop() + $("#concert-info").innerHeight() > $("#concert-info")[0].scrollHeight - 100) && moreResults) {
                 newPageRequests = 0;
                 iNewConcertAdded = 0;
                 page++;
@@ -162,20 +162,30 @@ $(document).ready(function () {
         var prettyConcertDate = moment(concertDate).format("MMMM Do YYYY");
         var concertTime = concert.dates.start.localTime;
         var prettyConcertTime = moment(concertTime,"hh:mm:ss").format("hh:mm a");
-        p.append("Concert Date: ",prettyConcertDate);
-        p.append("<br>Concert Time: ",prettyConcertTime);
+        if (concertDate !== undefined) {
+            p.append("Concert Date: ",prettyConcertDate);
+        }
+        if (concertTime !== undefined) {
+            p.append("<br>Concert Time: ",prettyConcertTime);
+        }
         
         // Ticket sale end date
         var ticketSaleEnd = concert.sales.public.endDateTime;
         var prettyTicketSaleEnd = moment(ticketSaleEnd).format("MMMM Do YYYY, h:mm a");
-
-        p.append("<br>Deadline To Buy Tickets Online: ",prettyTicketSaleEnd);
+        if (ticketSaleEnd !== undefined) {
+            p.append("<br>Deadline To Buy Tickets Online: ",prettyTicketSaleEnd);
+        }
         concertInfoDiv.append(h5,p);
         $("#concertMusicDiv").prepend(concertInfoDiv);
         $("#concertMusicDiv").append("<hr>");
     }
 
     function addConcertToUI(concert, artistId) {
+        if(concertList.length === 0) {
+            // Remove the "No Concerts Found" message
+            $("#concert-info").empty();
+        }
+
         // Store the data
         concertList.push(concert);
         iNewConcertAdded++;
@@ -185,10 +195,11 @@ $(document).ready(function () {
         concertDiv.addClass("concert-div");
         concertDiv.attr("data-index", iConcert);
         concertDiv.attr("data-artistId", artistId);
+        concertDiv.attr("data-open", "concertInfoModal");
         iConcert++;
 
         // Create an img
-        var img = $("<img data-open='concertInfoModal'>");
+        var img = $("<img>");
         img.addClass("concert-img");
 
         // Find the image url with 4:3 ratio
@@ -357,10 +368,10 @@ $(document).ready(function () {
                 // Create functions to hold album playlist
                 var newAlbumRow1 = $("<div class='row newAlbumRow'>");
                 var newAlbumCol1 = $("<div class='albumArtCol small-3 medium-3 large-3 columns'>");
-                var albumImg = $("<img src='"+albumArtwork+"' alt=\""+artistName+"\" style=\"display:block;margin:auto;margin-top:10%;\">");
+                var albumImg = $("<img src='"+albumArtwork+"' alt=\""+artistName+"\" style=\"display:block;margin:auto;margin:10%;\">");
                 newAlbumCol1.append(albumImg);
 
-                var newAlbumCol2 = $("<div class='albumInfo small-9 medium-9 large-9 columns'>");
+                var newAlbumCol2 = $("<div class='albumInfo small-9 medium-9 large-9 columns' style='padding-left:0'>");
                 var title = $("<h5>"+albumTitle+"</h5>");
                 var albumInfo = $("<p style='font-size: 14px;'>"+artistName+"</p>");
                 if (albumAdvisoryRating !== undefined) {
@@ -388,7 +399,6 @@ $(document).ready(function () {
                 $.get("https://cors-ut-bootcamp.herokuapp.com/https://itunes.apple.com/lookup?id="+artistID+"&entity=song&limit=20&sort=recent", function(tracks) {
                     var recentTracks = JSON.parse(tracks).results;
                     var songs = [];
-                    var previewLinks = [];
                     // console.log(recentTracks);
 
                     for (var m=1; m<recentTracks.length; m++) {
@@ -396,11 +406,14 @@ $(document).ready(function () {
                         var songPreview = recentTracks[m].trackViewUrl;
                         if (songs.length < 10 && songs.indexOf(songName) < 0) {
                             songs.push(songName);
-                            previewLinks.push(songPreview);
 
                             // Link 10 most recent songs to HTML
-                            var link = $("<a  target='_blank' href='"+previewLinks+"'></a>");
-                            var item = $("<li>"+songName+"</li>");
+                            var link = $("<a  target='_blank' href='"+songPreview+"'></a>");
+                            if(m % 2 == 0) {
+                                var item = $("<li>"+songName+"</li>");
+                            } else {
+                                var item = $("<li style='background-color:rgba(0, 0, 0, 0.8)')>"+songName+"</li>");
+                            }
                             link.append(item);
                             TrackList.append(link);
                         }
