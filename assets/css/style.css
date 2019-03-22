@@ -53,6 +53,10 @@ a:hover{
     color:rgb(255, 182, 103);
 }
 
+#logo{
+    width:400px;
+    margin-bottom:0px;
+}
 
 
 .box {
@@ -181,6 +185,8 @@ a:hover{
     background:none;
     border:none;
 } */
+
+
 
 #concert-music-div .modal-content{
     width:100%;
