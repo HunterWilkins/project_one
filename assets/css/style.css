@@ -4,6 +4,22 @@
 }
 
 
+/*Scrollbar*/
+
+::-webkit-scrollbar{
+    width:3px;
+}
+
+::-webkit-scrollbar-track {
+    background:rgb(24, 17, 51);
+    border-radius:2px;
+}
+
+::-webkit-scrollbar-thumb{
+    background: rgb(194, 50, 40);
+    border-radius:2px;
+}
+
 /* Animations */
 @keyframes colorful {
     0% {
@@ -29,16 +45,11 @@
     }
 }
 
-.background{
-    z-index: 0;
-    position: fixed;
-    top:0;
-    left:0;
-    filter:blur(5px);
-}
+
 
 html{
-    overflow:hidden;
+    
+    height:100%;
 }
 
 body {
@@ -46,7 +57,7 @@ body {
     background-attachment:fixed;
     background-repeat:no-repeat;
     background-size:cover;
-
+    height:100%;
     
 
     color: rgb(236, 73, 73);
@@ -71,7 +82,6 @@ a:hover{
     margin-bottom:0px;
 }
 
-
 .box {
     /* display:none; */
     
@@ -85,7 +95,8 @@ a:hover{
 }
 
 #concert-info{
-    height:400px;
+    min-height:200px;
+    max-height:300px;
     overflow-y:scroll;
 }
 
@@ -227,6 +238,14 @@ a:hover{
     margin: 15px auto;
 }
 
+.button{
+    background:rgb(82, 34, 115);
+    color:rgb(255, 95, 80);
+    font-size:18px;
+    padding:10px;
+    border: rgb(159, 48, 193) solid 2px;
+}
+
 footer {
     width:100%;
     background:rgb(59, 29, 45);
@@ -240,6 +259,7 @@ footer {
 
 
 @media only screen and (max-width: 400px){
+    
     body {
         background-image: url("../images/Genesis-Background-Mobile.png");
         background-attachment:fixed;
@@ -258,7 +278,7 @@ footer {
 
     #concert-info{
         height:300px;
-        overflow:scroll;
+        overflow-y:scroll;
     }
 
     .reveal-overlay{
@@ -275,4 +295,5 @@ footer {
         width:90%;
       margin: 0 auto;
     }
+
 }
