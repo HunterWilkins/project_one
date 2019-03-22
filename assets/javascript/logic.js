@@ -114,22 +114,26 @@ $(document).ready(function () {
 
         // Concert Name
         var concertName = concert.name;
-        var p = $("<p>");
-        p.text(concertName);
-
+        var h5 = $("<h5>");
+        h5.text(concertName);
+        
         // Concert Date
+        var p = $("<p>");
         var concertDate = concert.dates.start.localDate;
+        var prettyConcertDate = moment(concertDate).format("MMMM Do YYYY");
         var concertTime = concert.dates.start.localTime;
+        var prettyConcertTime = moment(concertTime,"hh:mm:ss").format("hh:mm a");
         var concertTimezone = concert.dates.timezone;
-        p.append("<br>Concert Date: ",concertDate);
-        p.append("<br>Concert Time: ",concertTime);
+        p.append("Concert Date: ",prettyConcertDate);
+        p.append("<br>Concert Time: ",prettyConcertTime);
         p.append("<br>Timezone: ",concertTimezone);
-
-        // Ticket sale start & end date
+        
+        // Ticket sale end date
         var ticketSaleEnd = concert.sales.public.endDateTime;
-        p.append("<br>Ticket Sale End Date: ",ticketSaleEnd);
+        var prettyTicketSaleEnd = moment(ticketSaleEnd).format("MMMM Do YYYY, h:mm a");
 
-        concertInfoDiv.append(p);
+        p.append("<br>Deadline To Buy Tickets Online: ",prettyTicketSaleEnd);
+        concertInfoDiv.append(h5,p);
         $("#concertMusicDiv").prepend(concertInfoDiv);
         $("#concertMusicDiv").append("<hr>");
     }
@@ -264,7 +268,7 @@ $(document).ready(function () {
             $.get("https://cors-ut-bootcamp.herokuapp.com/https://itunes.apple.com/lookup?amgArtistId="+AMGId+"&entity=album&limit=1&sort=recent", function (recent) {
                 var artistName = updatedArtist[0].artistName;
                 var recentAlbum = JSON.parse(recent).results;
-                console.log(recentAlbum);
+                // console.log(recentAlbum);
                 if (recentAlbum !== "[]") {
                     var albumArtwork = recentAlbum[1].artworkUrl100;
                     var albumTitle = recentAlbum[1].collectionName;
