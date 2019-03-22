@@ -3,8 +3,23 @@ $(document).ready(function () {
 
     // Holds the list of concerts
     var concertList = [];
-    var newConcertsNum = 0;
+    var artistIds = [];
+
+    // Keep track of total items
     var page = 0;
+    var iConcert = 0;
+    var city, state;
+    var moreResults;
+
+    // Keep track of new items added for each request
+    var newPageRequests = 0;
+    var iNewConcert = 0;
+    var iNewConcertAdded = 0;
+
+    // Queue to hold requests to MusicBrainz
+    var mbQueue = async.queue(function(task, callback) {
+        setTimeout(callback, 150);
+    }, 1);
 
     // Initialize the autocomplete city search
     var autocompleteOpt = {
@@ -16,11 +31,27 @@ $(document).ready(function () {
 
     // Search button click event
     $("#search-button").on("click", function(event) {
-        $("#concertDiv").attr("style","display:initial");
         searchLocation();
-    })
+    });
+
+    // // Load more if scrolled to bottom
+    var throttleTimer = null;
+    $(window).off('scroll', ScrollHandler).on('scroll', ScrollHandler);
+
+    function ScrollHandler(e) {
+        clearTimeout(throttleTimer);
+        throttleTimer = setTimeout(function () {
+            if (($(window).scrollTop() + $(window).height() > $(document).height() - 100) && moreResults) {
+                newPageRequests = 0;
+                iNewConcertAdded = 0;
+                page++;
+                getConcerts(city, state, page);
+            }
+        }, 100);
+    }
 
     function searchLocation() {
+        $("#concertDiv").attr("style","display:initial");
         var place = autocomplete.getPlace();
         var cityState;
         page = 0;
@@ -36,18 +67,15 @@ $(document).ready(function () {
             cityState = $("#search-box").val().split(" ");
         }
 
-        getConcerts(cityState[0].trim(), cityState[1].trim(), page);
-
-        // Ensure we have at least 10, but don't get more than 5 pages
-        // while(newConcertsNum < 10 && page < 5) {
-        //     getConcerts(cityState[0].trim(), cityState[1].trim(), page);
-        //     page++;
-        // }
-        // newConcertsNum = 0;
+        city = cityState[0].trim();
+        state = cityState[1].trim();
+        getConcerts(city, state, page);
     }
 
     // Get a list of concerts performing in the provided city
     function getConcerts(city, stateCode, page) {
+        iNewConcert = 0;
+
         var apiKey = "JviGs3zVAQltfcvyy3z0DWiOA7vrRa8d";
         var queryUrl = "https://app.ticketmaster.com/discovery/v2/events?apikey=" + apiKey +
             "&city=" + city +
@@ -55,11 +83,12 @@ $(document).ready(function () {
             "&page=" + page +
             "&sort=date%2Casc&classificationId=KZFzniwnSyZfZ7v7nJ";
 
-        $.get(queryUrl).then(function (response) {
+        $.get(queryUrl).then(function(response) {
             // Clear the old info if this is the first page
             if (page === 0) {
                 // Clear the data
                 concertList = [];
+                artistIds = [];
 
                 // Clear the UI
                 $("#concert-info").empty();
@@ -69,11 +98,21 @@ $(document).ready(function () {
             iConcert = concertList.length;
 
             // Get the new concert list from the response
-            newConcertList = response._embedded.events;
+            try {
+                var newConcertList = response._embedded.events;
+            } catch(err) {
+                if (page === 0) {
+                    // No results for the city entered
+                    $("#concert-info").append($("<h4>").text("No results found for " + city + ", " + state));
+                }
+                return;
+            }
 
-            // Append new data to the UI
-            newConcertList.forEach(getITunesId);
+            moreResults = newConcertList.length >= 20;
 
+            // Get or find the iTunes artist ID for each event
+            newConcertList.forEach(getITunesArtistId);
+            return;
         });
     }
 
@@ -123,10 +162,8 @@ $(document).ready(function () {
         var prettyConcertDate = moment(concertDate).format("MMMM Do YYYY");
         var concertTime = concert.dates.start.localTime;
         var prettyConcertTime = moment(concertTime,"hh:mm:ss").format("hh:mm a");
-        var concertTimezone = concert.dates.timezone;
         p.append("Concert Date: ",prettyConcertDate);
         p.append("<br>Concert Time: ",prettyConcertTime);
-        p.append("<br>Timezone: ",concertTimezone);
         
         // Ticket sale end date
         var ticketSaleEnd = concert.sales.public.endDateTime;
@@ -139,6 +176,10 @@ $(document).ready(function () {
     }
 
     function addConcertToUI(concert, artistId) {
+        // Store the data
+        concertList.push(concert);
+        iNewConcertAdded++;
+
         // Create a div to hold all elements
         var concertDiv = $("<div>");
         concertDiv.addClass("concert-div");
@@ -186,69 +227,109 @@ $(document).ready(function () {
         $("#concert-info").append(concertDiv);
     }
 
-    function getITunesId(concertInfo) {
-        var iTunesUrl, musicBrainzId;
-        var artistName = concertInfo.name;
-
-        // Check if there is iTunes info in the concert info
+    function getITunesArtistId(concertInfo) {
         try {
-            iTunesUrl = concertInfo._embedded.attractions[0].externalLinks.itunes[0].url;
-            var ArtistId = iTunesUrl.substring(iTunesUrl.indexOf("/id") + 1);
+            // Get the iTunes artist ID from Ticketmaster
+            var url = concertInfo._embedded.attractions[0].externalLinks.itunes[0].url;
+            var id = url.substring(url.indexOf("/id") + 3);
+            checkForDupliate(concertInfo, id);
+            return;
         } catch(err) {
-            iTunesUrl = undefined;
+            // No iTunes ID, continue searching below
         }
 
         try {
-            musicBrainzId = concertInfo._embedded.attractions[0].externalLinks.musicbrainz[0].id;
-            // Get the artist name from MusicBrainz
-            var queryUrl = "https://cors-ut-bootcamp.herokuapp.com/http://musicbrainz.org/ws/2/artist/" + musicBrainzId + "?inc=url-rels&fmt=json"
+            // Get the MusicBrainz ID from Ticketmaster
+            var musicBrainzId = concertInfo._embedded.attractions[0].externalLinks.musicbrainz[0].id;
+        } catch(err) {
+            // No MusicBrainz ID, search by concert name
+            searchITunesByName(concertInfo, concertInfo.name);
+            return;
+        }
+
+        mbQueue.push({}, function() {
+            // Query MusicBrainz URL for info
+            var queryUrl = "https://cors-ut-bootcamp.herokuapp.com/http://musicbrainz.org/ws/2/artist/"
+                        + musicBrainzId + "?inc=url-rels&fmt=json"
             $.get(queryUrl).then(function(response) {
-                // response = JSON.parse(response);
-                // Search each URL for the iTunes url
-                for (var i = 0; i < response.relations.length; i++) {
-                    if(response.relations[i].url.resource.includes("itunes.apple.com")) {
-                        var url = response.relations[i].url.resource
-
-                        // Check that this is not a duplicate
-                        if (concertList.map(function(e) { return e.name; }).indexOf(concertInfo.name) < 0) {
-                            // Append the new data to the list of concerts
+                try {
+                    // Search each URL for the iTunes url
+                    for (var i = 0; i < response.relations.length; i++) {
+                        if(response.relations[i].url.resource.includes("itunes.apple.com")) {
+                            // Get the iTunes artist ID
+                            var url = response.relations[i].url.resource;
                             var id = url.substring(url.indexOf("/id") + 3);
-                            newConcertsNum++;
-                            concertList.push(concertInfo);
-                            addConcertToUI(concertInfo, id);
+                            checkForDupliate(concertInfo, id);
+                            return;
                         }
                     }
+                } catch(err) {
+                // No URLs for this artist
                 }
+
+                // iTunes artist ID was not found, search by MusicBrainz artist name
+                searchITunesByName(concertInfo, response.name);
+                return;
             });
+        });
+    }
 
-            // iTunes link not found, use artist name from MusicBrainz to search iTunes
-            artistName = response.name;
-        } catch(err) {
-            musicBrainzId = undefined;
-        }
-
-        try {
-            // Search iTunes for an exact match
-            if(artistName !== undefined) {
-                var queryUrl = "https://cors-ut-bootcamp.herokuapp.com/https://itunes.apple.com/search?term=" + artistName + "&limit=1"
-                $.get(queryUrl, function(response) {
-                    response = JSON.parse(response);
-                    if(response.resultCount > 0) {
-                        if(response.results[0].artistName === artistName) {
-                            // Check that this is not a duplicate
-                            if (concertList.map(function(e) { return e.name; }).indexOf(concertInfo.name) < 0) {
-                                // Append the new data to the list of concerts
-                                var id = response.results[0].artistId.toString();
-                                newConcertsNum++;
-                                concertList.push(concertInfo);
-                                addConcertToUI(concertInfo, id);
-                            }
-                        }
-                    }
-                });
+    function searchITunesByName(concertInfo, artistName) {
+        var queryUrl = "https://cors-ut-bootcamp.herokuapp.com/https://itunes.apple.com/search?term="
+                        + artistName + "&limit=1"
+        $.get(queryUrl, function(response) {
+            try {
+                response = JSON.parse(response);
+                
+                // Ensure the names match
+                if(response.results[0].artistName === artistName) {
+                    var id = response.results[0].artistId.toString();
+                    checkForDupliate(concertInfo, id);
+                    return;
+                }
+            } catch(err) {
+                // No results for iTunes search of artist name
             }
-        } catch(err) {
-            artistName = undefined;
+            
+            checkAddMore();
+            return;
+        });
+    }
+
+    function checkForDupliate(concertInfo, id) {
+        if (artistIds.indexOf(id) < 0) {
+            // Append the new data to the list of concerts
+            artistIds.push(id);
+            addConcertToUI(concertInfo, id);
+        }
+        checkAddMore();
+    }
+
+    function checkAddMore() {
+        iNewConcert++;
+
+        // Check if more results should be added
+        if(moreResults) {
+            if (iNewConcert >= 20 && iNewConcertAdded < 10 && newPageRequests < 5) {
+                // Gone through entire new list, less than 10 were added, and haven't made more than 5 page requests
+                newPageRequests++;
+                page++;
+                getConcerts(city, state, page);
+            } else if (iNewConcert >= 20 && (iNewConcertAdded >= 10 || newPageRequests >= 5)) {
+                // Gone through entire new list, exceeded concerts added or page requests
+                iNewConcertAdded = 0;
+                newPageRequests = 0;
+            }
+        } else {
+            // Ticketmaster returned fewer results than requested
+            iNewConcert = 0;
+            iNewConcertAdded = 0;
+            newPageRequests = 0;
+
+            if (page === 0 && concertList.length === 0) {
+                // No results for the city entered
+                $("#concert-info").append($("<h4>").text("No results found for " + city + ", " + state));
+            }
         }
     }
 
@@ -259,77 +340,70 @@ $(document).ready(function () {
     })
 
     function getTracks(artistID) {
-        $.get("https://cors-ut-bootcamp.herokuapp.com/https://itunes.apple.com/lookup?id="+artistID+"&entity=album&limit=1", function (response) {
-            var updatedArtist = JSON.parse(response).results;  
-            // Grab artist AMG ID in order to find their top 5 albums & 5 most recent songs
-            var AMGId = updatedArtist[0].amgArtistId;  
+        // Look up artist by their AMG artist ID and get artist’s most recent album
+        $.get("https://cors-ut-bootcamp.herokuapp.com/https://itunes.apple.com/lookup?id="+artistID+"&entity=album&limit=1&sort=recent", function (recent) {
+            var recentAlbum = JSON.parse(recent).results;
+            var artistName = recentAlbum[0].artistName;
+            //console.log(recentAlbum);
+            if (recentAlbum !== "[]") {
+                var albumArtwork = recentAlbum[1].artworkUrl100;
+                var albumTitle = recentAlbum[1].collectionName;
+                var albumPrice = recentAlbum[1].collectionPrice;
+                var albumAdvisoryRating = recentAlbum[1].contentAdvisoryRating;
+                var albumReleaseDate = recentAlbum[1].releaseDate;
+                var albumSongPreviewsLink = recentAlbum[1].collectionViewUrl;
                 
-            // Look up artist by their AMG artist ID and get artist’s most recent album
-            $.get("https://cors-ut-bootcamp.herokuapp.com/https://itunes.apple.com/lookup?amgArtistId="+AMGId+"&entity=album&limit=1&sort=recent", function (recent) {
-                var artistName = updatedArtist[0].artistName;
-                var recentAlbum = JSON.parse(recent).results;
-                // console.log(recentAlbum);
-                if (recentAlbum !== "[]") {
-                    var albumArtwork = recentAlbum[1].artworkUrl100;
-                    var albumTitle = recentAlbum[1].collectionName;
-                    var albumPrice = recentAlbum[1].collectionPrice;
-                    var albumAdvisoryRating = recentAlbum[1].contentAdvisoryRating;
-                    var albumReleaseDate = recentAlbum[1].releaseDate;
-                    var albumSongPreviewsLink = recentAlbum[1].collectionViewUrl;
-                    
-                    // Create functions to hold album playlist
-                    var newAlbumRow1 = $("<div class='row newAlbumRow'>");
-                    var newAlbumCol1 = $("<div class='albumArtCol small-3 medium-3 large-3 columns'>");
-                    var albumImg = $("<img src='"+albumArtwork+"' alt=\""+artistName+"\" style=\"display:block;margin:auto;margin-top:10%;\">");
-                    newAlbumCol1.append(albumImg);
+                // Create functions to hold album playlist
+                var newAlbumRow1 = $("<div class='row newAlbumRow'>");
+                var newAlbumCol1 = $("<div class='albumArtCol small-3 medium-3 large-3 columns'>");
+                var albumImg = $("<img src='"+albumArtwork+"' alt=\""+artistName+"\" style=\"display:block;margin:auto;margin-top:10%;\">");
+                newAlbumCol1.append(albumImg);
 
-                    var newAlbumCol2 = $("<div class='albumInfo small-9 medium-9 large-9 columns'>");
-                    var title = $("<h5>"+albumTitle+"</h5>");
-                    var albumInfo = $("<p style='font-size: 14px;'>"+artistName+"<br><i>Rating: "+albumAdvisoryRating+"<br>Album Release Date: "+albumReleaseDate+"<br>Price: $"+albumPrice+"<br></i></p>");
-                    newAlbumCol2.append(title,albumInfo);
-                    
-                    var albumLink = $("<a target='_blank' href='"+albumSongPreviewsLink+"' class='button'>Preview the album</a>");
-                    newAlbumRow1.append(newAlbumCol1,newAlbumCol2);
-                    $("#concertMusicDiv").append(newAlbumRow1,albumLink);
+                var newAlbumCol2 = $("<div class='albumInfo small-9 medium-9 large-9 columns'>");
+                var title = $("<h5>"+albumTitle+"</h5>");
+                var albumInfo = $("<p style='font-size: 14px;'>"+artistName+"<br><i>Rating: "+albumAdvisoryRating+"<br>Album Release Date: "+albumReleaseDate+"<br>Price: $"+albumPrice+"<br></i></p>");
+                newAlbumCol2.append(title,albumInfo);
+                
+                var albumLink = $("<a target='_blank' href='"+albumSongPreviewsLink+"' class='button'>Preview the album</a>");
+                newAlbumRow1.append(newAlbumCol1,newAlbumCol2);
+                $("#concertMusicDiv").append(newAlbumRow1,albumLink);
 
-                    var newAlbumRow2 = $("<div class='row newAlbumRow'>");
-                    var newTracksCol = $("<div class='twelve columns'>");
-                    var para = $("<p>Check out the artist's 10 most recent tracks below!</p>")
-                    var TrackList = $("<ol id='tracks'>");
-                    newTracksCol.append(para,TrackList);
+                var newAlbumRow2 = $("<div class='row newAlbumRow'>");
+                var newTracksCol = $("<div class='twelve columns'>");
+                var para = $("<p>Check out the artist's 10 most recent tracks below!</p>")
+                var TrackList = $("<ol id='tracks'>");
+                newTracksCol.append(para,TrackList);
 
-                    // Get top recent songs by artist *AKA* prediction for songs sang at concert
-                    $.get("https://cors-ut-bootcamp.herokuapp.com/https://itunes.apple.com/lookup?amgArtistId="+AMGId+"&entity=song&limit=20&sort=recent", function(tracks) {
-                        var recentTracks = JSON.parse(tracks).results;
-                        var songs = [];
-                        var previewLinks = [];
-                        // console.log(recentTracks);
+                // Get top recent songs by artist *AKA* prediction for songs sang at concert
+                $.get("https://cors-ut-bootcamp.herokuapp.com/https://itunes.apple.com/lookup?id="+artistID+"&entity=song&limit=20&sort=recent", function(tracks) {
+                    var recentTracks = JSON.parse(tracks).results;
+                    var songs = [];
+                    var previewLinks = [];
+                    // console.log(recentTracks);
 
-                        for (var m=1; m<recentTracks.length; m++) {
-                            var songName = recentTracks[m].trackName;
-                            var songPreview = recentTracks[m].trackViewUrl;
-                            if (songs.length < 10 && songs.indexOf(songName) < 0) {
-                                songs.push(songName);
-                                previewLinks.push(songPreview);
+                    for (var m=1; m<recentTracks.length; m++) {
+                        var songName = recentTracks[m].trackName;
+                        var songPreview = recentTracks[m].trackViewUrl;
+                        if (songs.length < 10 && songs.indexOf(songName) < 0) {
+                            songs.push(songName);
+                            previewLinks.push(songPreview);
 
-                                // Link 10 most recent songs to HTML
-                                var link = $("<a  target='_blank' href='"+previewLinks+"'></a>");
-                                var item = $("<li>"+songName+"</li>");
-                                link.append(item);
-                                TrackList.append(link);
-                            }
+                            // Link 10 most recent songs to HTML
+                            var link = $("<a  target='_blank' href='"+previewLinks+"'></a>");
+                            var item = $("<li>"+songName+"</li>");
+                            link.append(item);
+                            TrackList.append(link);
                         }
-                        // console.log(songs);
-                        // console.log(previewLinks);
+                    }
+                    // console.log(songs);
+                    // console.log(previewLinks);
 
-                        newAlbumRow2.append(newTracksCol);
-                        $("#concertMusicDiv").append(newAlbumRow2);
-                    });
-                } else {
-                    $("#concertMusicDiv").text("No album preview available");
-                }
-            });
-            
+                    newAlbumRow2.append(newTracksCol);
+                    $("#concertMusicDiv").append(newAlbumRow2);
+                });
+            } else {
+                $("#concertMusicDiv").text("No album preview available");
+            }
         });
     }
 })
