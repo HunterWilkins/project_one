@@ -223,6 +223,10 @@ a:hover{
     font-size:40px;
 }
 
+.reveal{
+    margin: 15px auto;
+}
+
 footer {
     width:100%;
     background:rgb(59, 29, 45);
