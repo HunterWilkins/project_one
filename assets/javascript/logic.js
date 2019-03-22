@@ -92,16 +92,25 @@ $(document).ready(function () {
         // Create an img
         var imgArtist = $("<img>");
         imgArtist.addClass("artist-img");
+        imgArtist.attr("style","padding:10px 0");
 
         // Find the image url with 4:3 ratio
         for(var i = 0; i < concert.images.length; i++) {
             if(concert.images[i].ratio === "4_3") {
                 imgArtist.attr("src", concert.images[i].url);
-                console.log(concert.images[i].url);
+                // console.log(concert.images[i].url);
                 concertInfoDiv.append(imgArtist);
                 break;
             }
         }
+
+        // Link to ticketmaster for tickets
+        var buyTickets = concert.url;
+        var purchaseTicket = $("<a target='_blank' href='"+buyTickets+"'>")
+        var buyButton = $("<button class='button'>Purchase Tickets</button>");
+        purchaseTicket.append(buyButton);
+
+        concertInfoDiv.append("<br>",purchaseTicket);
 
         // Concert Name
         var concertName = concert.name;
@@ -117,22 +126,12 @@ $(document).ready(function () {
         p.append("<br>Timezone: ",concertTimezone);
 
         // Ticket sale start & end date
-        var ticketSaleStart = concert.sales.public.startDateTime;   
         var ticketSaleEnd = concert.sales.public.endDateTime;
-        p.append("<br>Ticket Sale Start Date: ",ticketSaleStart);
         p.append("<br>Ticket Sale End Date: ",ticketSaleEnd);
 
         concertInfoDiv.append(p);
-
-        // Link to ticketmaster for tickets
-        var buyTickets = concert.url;
-        var purchaseTicket = $("<a target='_blank' href='"+buyTickets+"'>")
-        var buyButton = $("<button class='button'>Purchase Tickets</button>");
-        purchaseTicket.append(buyButton);
-
-        concertInfoDiv.append(purchaseTicket);
-        $("#concertInfoModal").prepend(concertInfoDiv);
-        $("#concertInfoModal").append("<hr>");
+        $("#concertMusicDiv").prepend(concertInfoDiv);
+        $("#concertMusicDiv").append("<hr>");
     }
 
     function addConcertToUI(concert, artistId) {
@@ -250,7 +249,7 @@ $(document).ready(function () {
     }
 
     $("#concert-info").on("click", ".concert-div", function(event){
-        $("#concertInfoModal").empty();
+        $("#concertMusicDiv").empty();
         getTracks($(this).attr("data-artistId"));
         addConcertToModal($(this).attr("data-index"));
     })
@@ -265,62 +264,68 @@ $(document).ready(function () {
             $.get("https://cors-ut-bootcamp.herokuapp.com/https://itunes.apple.com/lookup?amgArtistId="+AMGId+"&entity=album&limit=1&sort=recent", function (recent) {
                 var artistName = updatedArtist[0].artistName;
                 var recentAlbum = JSON.parse(recent).results;
-                var albumArtwork = recentAlbum[1].artworkUrl100;
-                var albumTitle = recentAlbum[1].collectionName;
-                var albumPrice = recentAlbum[1].collectionPrice;
-                var albumAdvisoryRating = recentAlbum[1].contentAdvisoryRating;
-                var albumReleaseDate = recentAlbum[1].releaseDate;
-                var albumSongPreviewsLink = recentAlbum[1].collectionViewUrl;
-                
-                // Create functions to hold album playlist
-                var newAlbumRow1 = $("<div class='row newAlbumRow'>");
-                var newAlbumCol1 = $("<div class='albumArtCol small-3 medium-3 large-3 columns'>");
-                var albumImg = $("<img src='"+albumArtwork+"' alt=\""+artistName+"\" style=\"display:block;margin:auto;margin-top:10%;\">");
-                newAlbumCol1.append(albumImg);
+                console.log(recentAlbum);
+                if (recentAlbum !== "[]") {
+                    var albumArtwork = recentAlbum[1].artworkUrl100;
+                    var albumTitle = recentAlbum[1].collectionName;
+                    var albumPrice = recentAlbum[1].collectionPrice;
+                    var albumAdvisoryRating = recentAlbum[1].contentAdvisoryRating;
+                    var albumReleaseDate = recentAlbum[1].releaseDate;
+                    var albumSongPreviewsLink = recentAlbum[1].collectionViewUrl;
+                    
+                    // Create functions to hold album playlist
+                    var newAlbumRow1 = $("<div class='row newAlbumRow'>");
+                    var newAlbumCol1 = $("<div class='albumArtCol small-3 medium-3 large-3 columns'>");
+                    var albumImg = $("<img src='"+albumArtwork+"' alt=\""+artistName+"\" style=\"display:block;margin:auto;margin-top:10%;\">");
+                    newAlbumCol1.append(albumImg);
 
-                var newAlbumCol2 = $("<div class='albumInfo small-9 medium-9 large-9 columns'>");
-                var title = $("<h5>"+albumTitle+"</h5>");
-                var albumInfo = $("<p style='font-size: 14px;'>"+artistName+"<br><i>Rating: "+albumAdvisoryRating+"<br>Album Release Date: "+albumReleaseDate+"<br>Price: $"+albumPrice+"<br></i></p>");
-                newAlbumCol2.append(title,albumInfo);
-                
-                var albumLink = $("<a target='_blank' href='"+albumSongPreviewsLink+"' class='button'>Preview the album</a>");
-                newAlbumRow1.append(newAlbumCol1,newAlbumCol2);
-                $("#concertInfoModal").append(newAlbumRow1,albumLink);
+                    var newAlbumCol2 = $("<div class='albumInfo small-9 medium-9 large-9 columns'>");
+                    var title = $("<h5>"+albumTitle+"</h5>");
+                    var albumInfo = $("<p style='font-size: 14px;'>"+artistName+"<br><i>Rating: "+albumAdvisoryRating+"<br>Album Release Date: "+albumReleaseDate+"<br>Price: $"+albumPrice+"<br></i></p>");
+                    newAlbumCol2.append(title,albumInfo);
+                    
+                    var albumLink = $("<a target='_blank' href='"+albumSongPreviewsLink+"' class='button'>Preview the album</a>");
+                    newAlbumRow1.append(newAlbumCol1,newAlbumCol2);
+                    $("#concertMusicDiv").append(newAlbumRow1,albumLink);
 
-                var newAlbumRow2 = $("<div class='row newAlbumRow'>");
-                var newTracksCol = $("<div class='twelve columns'>");
-                var para = $("<p>Check out the artist's 10 most recent tracks below!</p>")
-                var TrackList = $("<ol id='tracks'>");
-                newTracksCol.append(para,TrackList);
+                    var newAlbumRow2 = $("<div class='row newAlbumRow'>");
+                    var newTracksCol = $("<div class='twelve columns'>");
+                    var para = $("<p>Check out the artist's 10 most recent tracks below!</p>")
+                    var TrackList = $("<ol id='tracks'>");
+                    newTracksCol.append(para,TrackList);
 
-                // Get top recent songs by artist *AKA* prediction for songs sang at concert
-                $.get("https://cors-ut-bootcamp.herokuapp.com/https://itunes.apple.com/lookup?amgArtistId="+AMGId+"&entity=song&limit=20&sort=recent", function(tracks) {
-                    var recentTracks = JSON.parse(tracks).results;
-                    var songs = [];
-                    var previewLinks = [];
-                    // console.log(recentTracks);
+                    // Get top recent songs by artist *AKA* prediction for songs sang at concert
+                    $.get("https://cors-ut-bootcamp.herokuapp.com/https://itunes.apple.com/lookup?amgArtistId="+AMGId+"&entity=song&limit=20&sort=recent", function(tracks) {
+                        var recentTracks = JSON.parse(tracks).results;
+                        var songs = [];
+                        var previewLinks = [];
+                        // console.log(recentTracks);
 
-                    for (var m=1; m<recentTracks.length; m++) {
-                        var songName = recentTracks[m].trackName;
-                        var songPreview = recentTracks[m].trackViewUrl;
-                        if (songs.length < 10 && songs.indexOf(songName) < 0) {
-                            songs.push(songName);
-                            previewLinks.push(songPreview);
+                        for (var m=1; m<recentTracks.length; m++) {
+                            var songName = recentTracks[m].trackName;
+                            var songPreview = recentTracks[m].trackViewUrl;
+                            if (songs.length < 10 && songs.indexOf(songName) < 0) {
+                                songs.push(songName);
+                                previewLinks.push(songPreview);
 
-                            // Link 10 most recent songs to HTML
-                            var link = $("<a  target='_blank' href='"+previewLinks+"'></a>");
-                            var item = $("<li>"+songName+"</li>");
-                            link.append(item);
-                            TrackList.append(link);
+                                // Link 10 most recent songs to HTML
+                                var link = $("<a  target='_blank' href='"+previewLinks+"'></a>");
+                                var item = $("<li>"+songName+"</li>");
+                                link.append(item);
+                                TrackList.append(link);
+                            }
                         }
-                    }
-                    // console.log(songs);
-                    // console.log(previewLinks);
+                        // console.log(songs);
+                        // console.log(previewLinks);
 
-                    newAlbumRow2.append(newTracksCol);
-                    $("#concertInfoModal").append(newAlbumRow2);
-                });
+                        newAlbumRow2.append(newTracksCol);
+                        $("#concertMusicDiv").append(newAlbumRow2);
+                    });
+                } else {
+                    $("#concertMusicDiv").text("No album preview available");
+                }
             });
+            
         });
     }
 })
