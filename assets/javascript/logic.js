@@ -75,10 +75,19 @@ $(document).ready(function () {
             iConcert = concertList.length;
 
             // Get the new concert list from the response
-            var newConcertList = response._embedded.events;
+            try {
+                var newConcertList = response._embedded.events;
+            } catch(err) {
+                if (page === 0) {
+                    // No results for the city entered
+                    $("#concert-info").append($("<h4>").text("No results found for " + city + ", " + state));
+                }
+                return;
+            }
+
             moreResults = newConcertList.length >= 20;
 
-            // Append new data to the UI
+            // Get or find the iTunes artist ID for each event
             newConcertList.forEach(getITunesArtistId);
         });
     }
