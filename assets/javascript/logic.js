@@ -404,7 +404,11 @@ $(document).ready(function () {
 
                             // Link 10 most recent songs to HTML
                             var link = $("<a  target='_blank' href='"+songPreview+"'></a>");
-                            var item = $("<li>"+songName+"</li>");
+                            if(m % 2 == 0) {
+                                var item = $("<li>"+songName+"</li>");
+                            } else {
+                                var item = $("<li style='background-color:rgba(0, 0, 0, 0.8)')>"+songName+"</li>");
+                            }
                             link.append(item);
                             TrackList.append(link);
                         }
