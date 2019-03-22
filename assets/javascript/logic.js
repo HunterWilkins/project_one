@@ -34,14 +34,14 @@ $(document).ready(function () {
         searchLocation();
     });
 
-    // // Load more if scrolled to bottom
+    // Load more if scrolled to bottom
     var throttleTimer = null;
-    $(window).off('scroll', ScrollHandler).on('scroll', ScrollHandler);
+    $("#concert-info").off('scroll', ScrollHandler).on('scroll', ScrollHandler);
 
     function ScrollHandler(e) {
         clearTimeout(throttleTimer);
         throttleTimer = setTimeout(function () {
-            if (($(window).scrollTop() + $(window).height() > $(document).height() - 100) && moreResults) {
+            if (($("#concert-info").scrollTop() + $("#concert-info").innerHeight() > $("#concert-info")[0].scrollHeight - 100) && moreResults) {
                 newPageRequests = 0;
                 iNewConcertAdded = 0;
                 page++;
@@ -181,6 +181,11 @@ $(document).ready(function () {
     }
 
     function addConcertToUI(concert, artistId) {
+        if(concertList.length === 0) {
+            // Remove the "No Concerts Found" message
+            $("#concert-info").empty();
+        }
+
         // Store the data
         concertList.push(concert);
         iNewConcertAdded++;
