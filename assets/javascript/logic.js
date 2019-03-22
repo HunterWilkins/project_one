@@ -3,6 +3,7 @@ $(document).ready(function () {
 
     // Holds the list of concerts
     var concertList = [];
+    var artistIds = [];
 
     // Keep track of total items
     var page = 0;
@@ -33,15 +34,21 @@ $(document).ready(function () {
         searchLocation();
     });
 
-    // Load more if scrolled to bottom
-    $(window).scroll(function() {
-        if(($(window).scrollTop() + $(window).height() == $(document).height()) && moreResults) {
-            newPageRequests = 0;
-            iNewConcertAdded = 0;
-            page++;
-            getConcerts(city, state, page);
-        }
-     });
+    // // Load more if scrolled to bottom
+    var throttleTimer = null;
+    $(window).off('scroll', ScrollHandler).on('scroll', ScrollHandler);
+
+    function ScrollHandler(e) {
+        clearTimeout(throttleTimer);
+        throttleTimer = setTimeout(function () {
+            if (($(window).scrollTop() + $(window).height() > $(document).height() - 100) && moreResults) {
+                newPageRequests = 0;
+                iNewConcertAdded = 0;
+                page++;
+                getConcerts(city, state, page);
+            }
+        }, 100);
+    }
 
     function searchLocation() {
         $("#concertDiv").attr("style","display:initial");
@@ -81,6 +88,7 @@ $(document).ready(function () {
             if (page === 0) {
                 // Clear the data
                 concertList = [];
+                artistIds = [];
 
                 // Clear the UI
                 $("#concert-info").empty();
@@ -104,11 +112,6 @@ $(document).ready(function () {
 
             // Get or find the iTunes artist ID for each event
             newConcertList.forEach(getITunesArtistId);
-
-            if (page === 0 && concertList.length === 0) {
-                // No results for the city entered
-                $("#concert-info").append($("<h4>").text("No results found for " + city + ", " + state));
-            }
             return;
         });
     }
@@ -294,8 +297,9 @@ $(document).ready(function () {
     }
 
     function checkForDupliate(concertInfo, id) {
-        if (concertList.map(function(e) { return e.name; }).indexOf(concertInfo.name) < 0) {
+        if (artistIds.indexOf(id) < 0) {
             // Append the new data to the list of concerts
+            artistIds.push(id);
             addConcertToUI(concertInfo, id);
         }
         checkAddMore();
@@ -321,6 +325,11 @@ $(document).ready(function () {
             iNewConcert = 0;
             iNewConcertAdded = 0;
             newPageRequests = 0;
+
+            if (page === 0 && concertList.length === 0) {
+                // No results for the city entered
+                $("#concert-info").append($("<h4>").text("No results found for " + city + ", " + state));
+            }
         }
     }
 
@@ -334,7 +343,7 @@ $(document).ready(function () {
         // Look up artist by their AMG artist ID and get artist’s most recent album
         $.get("https://cors-ut-bootcamp.herokuapp.com/https://itunes.apple.com/lookup?id="+artistID+"&entity=album&limit=1&sort=recent", function (recent) {
             var recentAlbum = JSON.parse(recent).results;
-            var artistName = recent[0].artistName
+            var artistName = recentAlbum[0].artistName;
             //console.log(recentAlbum);
             if (recentAlbum !== "[]") {
                 var albumArtwork = recentAlbum[1].artworkUrl100;
