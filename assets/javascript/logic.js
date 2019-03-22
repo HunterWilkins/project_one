@@ -351,6 +351,7 @@ $(document).ready(function () {
                 var albumPrice = recentAlbum[1].collectionPrice;
                 var albumAdvisoryRating = recentAlbum[1].contentAdvisoryRating;
                 var albumReleaseDate = recentAlbum[1].releaseDate;
+                var prettyAlbumReleaseDate = moment(albumReleaseDate).format('MMMM Do YYYY, h:mm a');
                 var albumSongPreviewsLink = recentAlbum[1].collectionViewUrl;
                 
                 // Create functions to hold album playlist
@@ -361,7 +362,16 @@ $(document).ready(function () {
 
                 var newAlbumCol2 = $("<div class='albumInfo small-9 medium-9 large-9 columns'>");
                 var title = $("<h5>"+albumTitle+"</h5>");
-                var albumInfo = $("<p style='font-size: 14px;'>"+artistName+"<br><i>Rating: "+albumAdvisoryRating+"<br>Album Release Date: "+albumReleaseDate+"<br>Price: $"+albumPrice+"<br></i></p>");
+                var albumInfo = $("<p style='font-size: 14px;'>"+artistName+"</p>");
+                if (albumAdvisoryRating !== undefined) {
+                    albumInfo.append("<br><i>Rating: "+albumAdvisoryRating+"</i>");
+                } 
+                if (albumReleaseDate !== undefined) {
+                    albumInfo.append("<br><i>Album Release Date: "+prettyAlbumReleaseDate+"</i>");
+                } 
+                if (albumPrice !== undefined) {
+                    albumInfo.append("<br>Price: $"+albumPrice+"<br></i>");
+                } 
                 newAlbumCol2.append(title,albumInfo);
                 
                 var albumLink = $("<a target='_blank' href='"+albumSongPreviewsLink+"' class='button'>Preview the album</a>");
