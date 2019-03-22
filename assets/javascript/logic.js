@@ -329,77 +329,70 @@ $(document).ready(function () {
     })
 
     function getTracks(artistID) {
-        $.get("https://cors-ut-bootcamp.herokuapp.com/https://itunes.apple.com/lookup?id="+artistID+"&entity=album&limit=1", function (response) {
-            var updatedArtist = JSON.parse(response).results;  
-            // Grab artist AMG ID in order to find their top 5 albums & 5 most recent songs
-            var AMGId = updatedArtist[0].amgArtistId;  
+        // Look up artist by their AMG artist ID and get artist’s most recent album
+        $.get("https://cors-ut-bootcamp.herokuapp.com/https://itunes.apple.com/lookup?id="+artistID+"&entity=album&limit=1&sort=recent", function (recent) {
+            var recentAlbum = JSON.parse(recent).results;
+            var artistName = recent[0].artistName
+            console.log(recentAlbum);
+            if (recentAlbum !== "[]") {
+                var albumArtwork = recentAlbum[1].artworkUrl100;
+                var albumTitle = recentAlbum[1].collectionName;
+                var albumPrice = recentAlbum[1].collectionPrice;
+                var albumAdvisoryRating = recentAlbum[1].contentAdvisoryRating;
+                var albumReleaseDate = recentAlbum[1].releaseDate;
+                var albumSongPreviewsLink = recentAlbum[1].collectionViewUrl;
                 
-            // Look up artist by their AMG artist ID and get artist’s most recent album
-            $.get("https://cors-ut-bootcamp.herokuapp.com/https://itunes.apple.com/lookup?amgArtistId="+AMGId+"&entity=album&limit=1&sort=recent", function (recent) {
-                var artistName = updatedArtist[0].artistName;
-                var recentAlbum = JSON.parse(recent).results;
-                console.log(recentAlbum);
-                if (recentAlbum !== "[]") {
-                    var albumArtwork = recentAlbum[1].artworkUrl100;
-                    var albumTitle = recentAlbum[1].collectionName;
-                    var albumPrice = recentAlbum[1].collectionPrice;
-                    var albumAdvisoryRating = recentAlbum[1].contentAdvisoryRating;
-                    var albumReleaseDate = recentAlbum[1].releaseDate;
-                    var albumSongPreviewsLink = recentAlbum[1].collectionViewUrl;
-                    
-                    // Create functions to hold album playlist
-                    var newAlbumRow1 = $("<div class='row newAlbumRow'>");
-                    var newAlbumCol1 = $("<div class='albumArtCol small-3 medium-3 large-3 columns'>");
-                    var albumImg = $("<img src='"+albumArtwork+"' alt=\""+artistName+"\" style=\"display:block;margin:auto;margin-top:10%;\">");
-                    newAlbumCol1.append(albumImg);
+                // Create functions to hold album playlist
+                var newAlbumRow1 = $("<div class='row newAlbumRow'>");
+                var newAlbumCol1 = $("<div class='albumArtCol small-3 medium-3 large-3 columns'>");
+                var albumImg = $("<img src='"+albumArtwork+"' alt=\""+artistName+"\" style=\"display:block;margin:auto;margin-top:10%;\">");
+                newAlbumCol1.append(albumImg);
 
-                    var newAlbumCol2 = $("<div class='albumInfo small-9 medium-9 large-9 columns'>");
-                    var title = $("<h5>"+albumTitle+"</h5>");
-                    var albumInfo = $("<p style='font-size: 14px;'>"+artistName+"<br><i>Rating: "+albumAdvisoryRating+"<br>Album Release Date: "+albumReleaseDate+"<br>Price: $"+albumPrice+"<br></i></p>");
-                    newAlbumCol2.append(title,albumInfo);
-                    
-                    var albumLink = $("<a target='_blank' href='"+albumSongPreviewsLink+"' class='button'>Preview the album</a>");
-                    newAlbumRow1.append(newAlbumCol1,newAlbumCol2);
-                    $("#concertMusicDiv").append(newAlbumRow1,albumLink);
+                var newAlbumCol2 = $("<div class='albumInfo small-9 medium-9 large-9 columns'>");
+                var title = $("<h5>"+albumTitle+"</h5>");
+                var albumInfo = $("<p style='font-size: 14px;'>"+artistName+"<br><i>Rating: "+albumAdvisoryRating+"<br>Album Release Date: "+albumReleaseDate+"<br>Price: $"+albumPrice+"<br></i></p>");
+                newAlbumCol2.append(title,albumInfo);
+                
+                var albumLink = $("<a target='_blank' href='"+albumSongPreviewsLink+"' class='button'>Preview the album</a>");
+                newAlbumRow1.append(newAlbumCol1,newAlbumCol2);
+                $("#concertMusicDiv").append(newAlbumRow1,albumLink);
 
-                    var newAlbumRow2 = $("<div class='row newAlbumRow'>");
-                    var newTracksCol = $("<div class='twelve columns'>");
-                    var para = $("<p>Check out the artist's 10 most recent tracks below!</p>")
-                    var TrackList = $("<ol id='tracks'>");
-                    newTracksCol.append(para,TrackList);
+                var newAlbumRow2 = $("<div class='row newAlbumRow'>");
+                var newTracksCol = $("<div class='twelve columns'>");
+                var para = $("<p>Check out the artist's 10 most recent tracks below!</p>")
+                var TrackList = $("<ol id='tracks'>");
+                newTracksCol.append(para,TrackList);
 
-                    // Get top recent songs by artist *AKA* prediction for songs sang at concert
-                    $.get("https://cors-ut-bootcamp.herokuapp.com/https://itunes.apple.com/lookup?amgArtistId="+AMGId+"&entity=song&limit=20&sort=recent", function(tracks) {
-                        var recentTracks = JSON.parse(tracks).results;
-                        var songs = [];
-                        var previewLinks = [];
-                        // console.log(recentTracks);
+                // Get top recent songs by artist *AKA* prediction for songs sang at concert
+                $.get("https://cors-ut-bootcamp.herokuapp.com/https://itunes.apple.com/lookup?id="+artistID+"&entity=song&limit=20&sort=recent", function(tracks) {
+                    var recentTracks = JSON.parse(tracks).results;
+                    var songs = [];
+                    var previewLinks = [];
+                    // console.log(recentTracks);
 
-                        for (var m=1; m<recentTracks.length; m++) {
-                            var songName = recentTracks[m].trackName;
-                            var songPreview = recentTracks[m].trackViewUrl;
-                            if (songs.length < 10 && songs.indexOf(songName) < 0) {
-                                songs.push(songName);
-                                previewLinks.push(songPreview);
+                    for (var m=1; m<recentTracks.length; m++) {
+                        var songName = recentTracks[m].trackName;
+                        var songPreview = recentTracks[m].trackViewUrl;
+                        if (songs.length < 10 && songs.indexOf(songName) < 0) {
+                            songs.push(songName);
+                            previewLinks.push(songPreview);
 
-                                // Link 10 most recent songs to HTML
-                                var link = $("<a  target='_blank' href='"+previewLinks+"'></a>");
-                                var item = $("<li>"+songName+"</li>");
-                                link.append(item);
-                                TrackList.append(link);
-                            }
+                            // Link 10 most recent songs to HTML
+                            var link = $("<a  target='_blank' href='"+previewLinks+"'></a>");
+                            var item = $("<li>"+songName+"</li>");
+                            link.append(item);
+                            TrackList.append(link);
                         }
-                        // console.log(songs);
-                        // console.log(previewLinks);
+                    }
+                    // console.log(songs);
+                    // console.log(previewLinks);
 
-                        newAlbumRow2.append(newTracksCol);
-                        $("#concertMusicDiv").append(newAlbumRow2);
-                    });
-                } else {
-                    $("#concertMusicDiv").text("No album preview available");
-                }
-            });
-            
+                    newAlbumRow2.append(newTracksCol);
+                    $("#concertMusicDiv").append(newAlbumRow2);
+                });
+            } else {
+                $("#concertMusicDiv").text("No album preview available");
+            }
         });
     }
 })
