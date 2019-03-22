@@ -159,10 +159,8 @@ $(document).ready(function () {
         var prettyConcertDate = moment(concertDate).format("MMMM Do YYYY");
         var concertTime = concert.dates.start.localTime;
         var prettyConcertTime = moment(concertTime,"hh:mm:ss").format("hh:mm a");
-        var concertTimezone = concert.dates.timezone;
         p.append("Concert Date: ",prettyConcertDate);
         p.append("<br>Concert Time: ",prettyConcertTime);
-        p.append("<br>Timezone: ",concertTimezone);
         
         // Ticket sale end date
         var ticketSaleEnd = concert.sales.public.endDateTime;
