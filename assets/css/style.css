@@ -37,13 +37,17 @@
     filter:blur(5px);
 }
 
+html{
+    overflow:hidden;
+}
 
 body {
     background-image: url("../images/Genesis-Background-Edited.png");
     background-attachment:fixed;
     background-repeat:no-repeat;
-    background-size:100%;
+    background-size:cover;
 
+    
 
     color: rgb(236, 73, 73);
     margin-bottom: 100px;
@@ -78,6 +82,11 @@ a:hover{
     margin-bottom:15px;
     
     color: rgb(255, 182, 103);
+}
+
+#concert-info{
+    height:400px;
+    overflow-y:scroll;
 }
 
 .search-box {
@@ -162,6 +171,9 @@ a:hover{
 
 .concert-div:hover{
     cursor:pointer;
+    border: rgb(231, 55, 55) solid 2px;
+    border-radius: 5px;
+    
 }
 
 .concert-text-div {
@@ -171,6 +183,8 @@ a:hover{
     padding: 10px;
     color: white;
     background-color: rgba(0, 0, 0, 0.8);
+    border: inherit solid 2px;
+    border-radius: 5px;
 }
 
 .concert-text-artist {
@@ -188,10 +202,10 @@ a:hover{
     border: inherit solid;
 }
 
-#concert-music-div .modal-content{
+/* #concert-music-div .modal-content{
     width:100%;
     border:none;
-}
+} */
 
 .close-button{
     padding:3px 5px;
@@ -227,14 +241,34 @@ footer {
         background-attachment:fixed;
         background-repeat:no-repeat;
         background-size:150%;
-    
-    
+        
         color: rgb(236, 73, 73);
         margin-bottom: 100px;
         z-index: 2;    
     }
 
     .search-box{
-        font-size: 22px;
+        text-align:center;
+        font-size: 20px;
+    }
+
+    #concert-info{
+        height:300px;
+        overflow:scroll;
+    }
+
+    .reveal-overlay{
+        height:100%;
+        background:rgba(10, 10, 10, 0.80);
+    }
+
+    .button{
+        width: 100%;
+    }
+
+    .reveal{
+        
+        width:90%;
+      margin: 0 auto;
     }
 }
