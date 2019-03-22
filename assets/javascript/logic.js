@@ -15,6 +15,11 @@ $(document).ready(function () {
     var iNewConcert = 0;
     var iNewConcertAdded = 0;
 
+    // Queue to hold requests to MusicBrainz
+    var mbQueue = async.queue(function(task, callback) {
+        setTimeout(callback, 150);
+    }, 1);
+
     // Initialize the autocomplete city search
     var autocompleteOpt = {
         types: ['(cities)'],
@@ -26,7 +31,17 @@ $(document).ready(function () {
     // Search button click event
     $("#search-button").on("click", function(event) {
         searchLocation();
-    })
+    });
+
+    // Load more if scrolled to bottom
+    $(window).scroll(function() {
+        if(($(window).scrollTop() + $(window).height() == $(document).height()) && moreResults) {
+            newPageRequests = 0;
+            iNewConcertAdded = 0;
+            page++;
+            getConcerts(city, state, page);
+        }
+     });
 
     function searchLocation() {
         $("#concertDiv").attr("style","display:initial");
@@ -89,6 +104,12 @@ $(document).ready(function () {
 
             // Get or find the iTunes artist ID for each event
             newConcertList.forEach(getITunesArtistId);
+
+            if (page === 0 && concertList.length === 0) {
+                // No results for the city entered
+                $("#concert-info").append($("<h4>").text("No results found for " + city + ", " + state));
+            }
+            return;
         });
     }
 
@@ -221,29 +242,31 @@ $(document).ready(function () {
             searchITunesByName(concertInfo, concertInfo.name);
             return;
         }
-        
-        // Query MusicBrainz URL for info
-        var queryUrl = "https://cors-ut-bootcamp.herokuapp.com/http://musicbrainz.org/ws/2/artist/"
-                        + musicBrainzId + "?inc=url-rels&fmt=json"
-        $.get(queryUrl).then(function(response) {
-            try {
-                // Search each URL for the iTunes url
-                for (var i = 0; i < response.relations.length; i++) {
-                    if(response.relations[i].url.resource.includes("itunes.apple.com")) {
-                        // Get the iTunes artist ID
-                        var url = response.relations[i].url.resource;
-                        var id = url.substring(url.indexOf("/id") + 3);
-                        checkForDupliate(concertInfo, id);
-                        return;
-                    }
-                }
-            } catch(err) {
-                // No URLs for this artist
-            }
 
-            // iTunes artist ID was not found, search by MusicBrainz artist name
-            searchITunesByName(concertInfo, response.name);
-            return;
+        mbQueue.push({}, function() {
+            // Query MusicBrainz URL for info
+            var queryUrl = "https://cors-ut-bootcamp.herokuapp.com/http://musicbrainz.org/ws/2/artist/"
+                        + musicBrainzId + "?inc=url-rels&fmt=json"
+            $.get(queryUrl).then(function(response) {
+                try {
+                    // Search each URL for the iTunes url
+                    for (var i = 0; i < response.relations.length; i++) {
+                        if(response.relations[i].url.resource.includes("itunes.apple.com")) {
+                            // Get the iTunes artist ID
+                            var url = response.relations[i].url.resource;
+                            var id = url.substring(url.indexOf("/id") + 3);
+                            checkForDupliate(concertInfo, id);
+                            return;
+                        }
+                    }
+                } catch(err) {
+                // No URLs for this artist
+                }
+
+                // iTunes artist ID was not found, search by MusicBrainz artist name
+                searchITunesByName(concertInfo, response.name);
+                return;
+            });
         });
     }
 
