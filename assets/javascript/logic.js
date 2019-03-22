@@ -357,10 +357,10 @@ $(document).ready(function () {
                 // Create functions to hold album playlist
                 var newAlbumRow1 = $("<div class='row newAlbumRow'>");
                 var newAlbumCol1 = $("<div class='albumArtCol small-3 medium-3 large-3 columns'>");
-                var albumImg = $("<img src='"+albumArtwork+"' alt=\""+artistName+"\" style=\"display:block;margin:auto;margin-top:10%;\">");
+                var albumImg = $("<img src='"+albumArtwork+"' alt=\""+artistName+"\" style=\"display:block;margin:auto;margin:10%;\">");
                 newAlbumCol1.append(albumImg);
 
-                var newAlbumCol2 = $("<div class='albumInfo small-9 medium-9 large-9 columns'>");
+                var newAlbumCol2 = $("<div class='albumInfo small-9 medium-9 large-9 columns' style='padding-left:0'>");
                 var title = $("<h5>"+albumTitle+"</h5>");
                 var albumInfo = $("<p style='font-size: 14px;'>"+artistName+"</p>");
                 if (albumAdvisoryRating !== undefined) {
