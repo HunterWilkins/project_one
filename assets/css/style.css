@@ -4,6 +4,22 @@
 }
 
 
+/*Scrollbar*/
+
+::-webkit-scrollbar{
+    width:3px;
+}
+
+::-webkit-scrollbar-track {
+    background:rgb(24, 17, 51);
+    border-radius:2px;
+}
+
+::-webkit-scrollbar-thumb{
+    background: rgb(194, 50, 40);
+    border-radius:2px;
+}
+
 /* Animations */
 @keyframes colorful {
     0% {
@@ -29,16 +45,46 @@
     }
 }
 
+h5{
+    font-weight:bolder;
+    color:rgb(236, 175, 84);
+
+}
+
+h4{
+    font-weight:bolder;
+    color:rgb(255, 186, 112);
+    text-decoration: underline;
+    text-decoration-skip-ink: auto;
+}
+
+h3{
+    font-weight:bolder;
+    color:rgb(255, 186, 112);
+    text-decoration: underline;
+}
+
+hr {
+    border-bottom:none;
+    border: rgba(159, 48, 193, 0.517) solid 1px;
+}
+
+html{
+    
+    height:100%;
+}
 
 body {
     background-image: url("../images/Genesis-Background-Edited.png");
     background-attachment:fixed;
     background-repeat:no-repeat;
-
+    background-size:cover;
+    height:100%;
+    
 
     color: rgb(236, 73, 73);
     margin-bottom: 100px;
-    z-index:1;    
+    z-index: 2;    
 }
 
 .web-title h1{
@@ -46,14 +92,18 @@ body {
 }
 
 a{
-    color:rgb(213, 107, 207);
+    color:rgb(223, 142, 219);
+    font-style:italic;
 }
 
 a:hover{
     color:rgb(255, 182, 103);
 }
 
-
+#logo{
+    width:400px;
+    margin-bottom:0px;
+}
 
 .box {
     /* display:none; */
@@ -65,6 +115,12 @@ a:hover{
     margin-bottom:15px;
     
     color: rgb(255, 182, 103);
+}
+
+#concert-info{
+    min-height:200px;
+    max-height:300px;
+    overflow-y:scroll;
 }
 
 .search-box {
@@ -110,7 +166,6 @@ a:hover{
     box-shadow:none;
     border:rgb(88, 32, 22) solid 1px;
 
-
     animation: gradientstuff 1s forwards;
 }
 
@@ -145,10 +200,14 @@ a:hover{
     display: inline-block;
     position: relative;
     margin: 10px;
+    opacity:.7;
+    transition: box-shadow .25s, opacity .25s;
 }
 
 .concert-div:hover{
     cursor:pointer;
+    
+    opacity: 1;
 }
 
 .concert-text-div {
@@ -158,6 +217,16 @@ a:hover{
     padding: 10px;
     color: white;
     background-color: rgba(0, 0, 0, 0.8);
+    border: inherit solid 2px;
+    border-radius: 5px;
+}
+
+.concert-info-div{
+    text-align:center;
+}
+
+.concert-info-div h4{
+    font-style:bolder;
 }
 
 .concert-text-artist {
@@ -175,32 +244,48 @@ a:hover{
     border: inherit solid;
 }
 
-/* .reveal{
-    padding:0px;
-    margin: auto;
-    background:none;
-    border:none;
-} */
-
-#concert-music-div .modal-content{
+/* #concert-music-div .modal-content{
     width:100%;
     border:none;
-}
+} */
 
 .close-button{
     padding:3px 5px;
     color:rgb(255, 131, 100);
     background:rgb(74, 33, 83);
-    border:rgb(82, 34, 115) solid;
+    
+    font-size: 40px;
+   
 
-    border-radius:3px;
-
-    transition: font-size .25s;
+    transition: color .25s;
 }
 
 .close-button:hover{
     color:rgb(255, 172, 124);
-    font-size:40px;
+    
+}
+
+.reveal{
+    margin: 15px auto;
+    
+}
+
+.other-song{
+    background: rgb(15, 11, 39);
+}
+
+.button{
+    background:rgb(82, 34, 115);
+    color:rgb(255, 95, 80);
+    font-size:18px;
+    padding:10px;
+    border: rgb(159, 48, 193) solid 2px;
+}
+
+.button:hover{
+    background:rgb(159, 48, 193);
+    color:rgb(255, 182, 103);
+    text-shadow:0 0 2px rgb(255, 182, 103);
 }
 
 footer {
@@ -212,4 +297,45 @@ footer {
     position:fixed;
     bottom:0;
     left:0;
+}
+
+
+@media only screen and (max-width: 400px){
+    
+    body {
+        background-image: url("../images/Genesis-Background-Mobile.png");
+        background-attachment:fixed;
+        background-repeat:no-repeat;
+        background-size:150%;
+        
+        color: rgb(236, 73, 73);
+        margin-bottom: 100px;
+        z-index: 2;    
+    }
+
+    .search-box{
+        text-align:center;
+        font-size: 20px;
+    }
+
+    #concert-info{
+        height:300px;
+        overflow-y:scroll;
+    }
+
+    .reveal-overlay{
+        height:100%;
+        background:rgba(10, 10, 10, 0.80);
+    }
+
+    .button{
+        width: 100%;
+    }
+
+    .reveal{
+        
+        width:90%;
+      margin: 0 auto;
+    }
+
 }

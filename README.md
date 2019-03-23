@@ -4,7 +4,7 @@
 This is an app that allows the user to discover bands playing in their area and also to listen to that band's latest album and top hits.
 
 ## Getting Started
-<img src=''><br>
+<img src='assets/images/FinalProduct.png'><br>
 [Click here to check out the app!](https://hunterwilkins.github.io/project_one/)
 
 ## Built With

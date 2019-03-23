@@ -34,14 +34,14 @@ $(document).ready(function () {
         searchLocation();
     });
 
-    // // Load more if scrolled to bottom
+    // Load more if scrolled to bottom
     var throttleTimer = null;
-    $(window).off('scroll', ScrollHandler).on('scroll', ScrollHandler);
+    $("#concert-info").off('scroll', ScrollHandler).on('scroll', ScrollHandler);
 
     function ScrollHandler(e) {
         clearTimeout(throttleTimer);
         throttleTimer = setTimeout(function () {
-            if (($(window).scrollTop() + $(window).height() > $(document).height() - 100) && moreResults) {
+            if (($("#concert-info").scrollTop() + $("#concert-info").innerHeight() > $("#concert-info")[0].scrollHeight - 100) && moreResults) {
                 newPageRequests = 0;
                 iNewConcertAdded = 0;
                 page++;
@@ -145,11 +145,15 @@ $(document).ready(function () {
 
         // Link to ticketmaster for tickets
         var buyTickets = concert.url;
-        var purchaseTicket = $("<a target='_blank' href='"+buyTickets+"'>")
-        var buyButton = $("<button class='button'>Purchase Tickets</button>");
-        purchaseTicket.append(buyButton);
+        var purchaseTicket = $("<a target='_blank' href='"+buyTickets+"' class = 'button'>Purchase Tickets</a>")
+        
+        //===Turned purchaseTicket into its own button without creating a separate button ==== -Hunter
+        // var buyButton = $("<button class='button'>Purchase Tickets</button>");
+        // purchaseTicket.append(buyButton);
 
         concertInfoDiv.append("<br>",purchaseTicket);
+
+
 
         // Concert Name
         var concertName = concert.name;
@@ -162,20 +166,30 @@ $(document).ready(function () {
         var prettyConcertDate = moment(concertDate).format("MMMM Do YYYY");
         var concertTime = concert.dates.start.localTime;
         var prettyConcertTime = moment(concertTime,"hh:mm:ss").format("hh:mm a");
-        p.append("Concert Date: ",prettyConcertDate);
-        p.append("<br>Concert Time: ",prettyConcertTime);
+        if (concertDate !== undefined) {
+            p.append("Concert Date: ",prettyConcertDate);
+        }
+        if (concertTime !== undefined) {
+            p.append("<br>Concert Time: ",prettyConcertTime);
+        }
         
         // Ticket sale end date
         var ticketSaleEnd = concert.sales.public.endDateTime;
         var prettyTicketSaleEnd = moment(ticketSaleEnd).format("MMMM Do YYYY, h:mm a");
-
-        p.append("<br>Deadline To Buy Tickets Online: ",prettyTicketSaleEnd);
+        if (ticketSaleEnd !== undefined) {
+            p.append("<br>Deadline To Buy Tickets Online: ",prettyTicketSaleEnd);
+        }
         concertInfoDiv.append(h5,p);
         $("#concertMusicDiv").prepend(concertInfoDiv);
         $("#concertMusicDiv").append("<hr>");
     }
 
     function addConcertToUI(concert, artistId) {
+        if(concertList.length === 0) {
+            // Remove the "No Concerts Found" message
+            $("#concert-info").empty();
+        }
+
         // Store the data
         concertList.push(concert);
         iNewConcertAdded++;
@@ -185,10 +199,11 @@ $(document).ready(function () {
         concertDiv.addClass("concert-div");
         concertDiv.attr("data-index", iConcert);
         concertDiv.attr("data-artistId", artistId);
+        concertDiv.attr("data-open", "concertInfoModal");
         iConcert++;
 
         // Create an img
-        var img = $("<img data-open='concertInfoModal'>");
+        var img = $("<img>");
         img.addClass("concert-img");
 
         // Find the image url with 4:3 ratio
@@ -351,17 +366,27 @@ $(document).ready(function () {
                 var albumPrice = recentAlbum[1].collectionPrice;
                 var albumAdvisoryRating = recentAlbum[1].contentAdvisoryRating;
                 var albumReleaseDate = recentAlbum[1].releaseDate;
+                var prettyAlbumReleaseDate = moment(albumReleaseDate).format('MMMM Do YYYY, h:mm a');
                 var albumSongPreviewsLink = recentAlbum[1].collectionViewUrl;
                 
                 // Create functions to hold album playlist
                 var newAlbumRow1 = $("<div class='row newAlbumRow'>");
                 var newAlbumCol1 = $("<div class='albumArtCol small-3 medium-3 large-3 columns'>");
-                var albumImg = $("<img src='"+albumArtwork+"' alt=\""+artistName+"\" style=\"display:block;margin:auto;margin-top:10%;\">");
+                var albumImg = $("<img src='"+albumArtwork+"' alt=\""+artistName+"\" style=\"display:block;margin:auto;margin:10%;\">");
                 newAlbumCol1.append(albumImg);
 
-                var newAlbumCol2 = $("<div class='albumInfo small-9 medium-9 large-9 columns'>");
+                var newAlbumCol2 = $("<div class='albumInfo small-9 medium-9 large-9 columns' style='padding-left:0'>");
                 var title = $("<h5>"+albumTitle+"</h5>");
-                var albumInfo = $("<p style='font-size: 14px;'>"+artistName+"<br><i>Rating: "+albumAdvisoryRating+"<br>Album Release Date: "+albumReleaseDate+"<br>Price: $"+albumPrice+"<br></i></p>");
+                var albumInfo = $("<p style='font-size: 14px;'>"+artistName+"</p>");
+                if (albumAdvisoryRating !== undefined) {
+                    albumInfo.append("<br><i>Rating: "+albumAdvisoryRating+"</i>");
+                } 
+                if (albumReleaseDate !== undefined) {
+                    albumInfo.append("<br><i>Album Release Date: "+prettyAlbumReleaseDate+"</i>");
+                } 
+                if (albumPrice !== undefined) {
+                    albumInfo.append("<br>Price: $"+albumPrice+"<br></i>");
+                } 
                 newAlbumCol2.append(title,albumInfo);
                 
                 var albumLink = $("<a target='_blank' href='"+albumSongPreviewsLink+"' class='button'>Preview the album</a>");
@@ -386,7 +411,6 @@ $(document).ready(function () {
                         var songPreview = recentTracks[m].trackViewUrl;
                         if (songs.length < 10 && songs.indexOf(songName) < 0) {
                             songs.push(songName);
-                            previewLinks.push(songPreview);
 
                             // Link 10 most recent songs to HTML
                             var link = $("<a  target='_blank' href='"+songPreview+"'></a>");
