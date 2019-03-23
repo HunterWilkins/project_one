@@ -81,10 +81,8 @@ body {
     background-size:cover;
     height:100%;
     
-
     color: rgb(236, 73, 73);
-    margin-bottom: 100px;
-    z-index: 2;    
+    z-index: 2;
 }
 
 .web-title h1{
