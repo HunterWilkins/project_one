@@ -119,7 +119,7 @@ a:hover{
 
 #concert-info{
     min-height:200px;
-    max-height:300px;
+    height: calc(100vh - 310px);
     overflow-y:scroll;
 }
 
