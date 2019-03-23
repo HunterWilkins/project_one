@@ -403,6 +403,7 @@ $(document).ready(function () {
                 $.get("https://cors-ut-bootcamp.herokuapp.com/https://itunes.apple.com/lookup?id="+artistID+"&entity=song&limit=20&sort=recent", function(tracks) {
                     var recentTracks = JSON.parse(tracks).results;
                     var songs = [];
+                    var darkRow = true;
                     // console.log(recentTracks);
 
                     for (var m=1; m<recentTracks.length; m++) {
@@ -413,11 +414,12 @@ $(document).ready(function () {
 
                             // Link 10 most recent songs to HTML
                             var link = $("<a  target='_blank' href='"+songPreview+"'></a>");
-                            if(m % 2 == 0) {
-                                var item = $("<li>"+songName+"</li>");
-                            } else {
+                            if(darkRow) {
                                 var item = $("<li class = 'other-song'>"+songName+"</li>");
+                            } else {
+                                var item = $("<li>"+songName+"</li>");
                             }
+                            darkRow = !darkRow;
                             link.append(item);
                             TrackList.append(link);
                         }

@@ -81,10 +81,8 @@ body {
     background-size:cover;
     height:100%;
     
-
     color: rgb(236, 73, 73);
-    margin-bottom: 100px;
-    z-index: 2;    
+    z-index: 2;
 }
 
 .web-title h1{
@@ -119,7 +117,7 @@ a:hover{
 
 #concert-info{
     min-height:200px;
-    max-height:300px;
+    height: calc(100vh - 310px);
     overflow-y:scroll;
 }
 
