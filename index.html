@@ -7,57 +7,57 @@
     <title>Ñusic</title>    
     <link rel = "icon" href = "assets/images/Nusic-logo-transparent.png">
     <!--CDN Link for ZURB Foundation-->
-    <link rel = "stylesheet" href = "https://cdnjs.cloudflare.com/ajax/libs/foundation/6.5.3/css/foundation-float.css">
+    <!-- <link rel = "stylesheet" href = "https://cdnjs.cloudflare.com/ajax/libs/foundation/6.5.3/css/foundation-float.css"> -->
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
 
 <body>
     
     
-    <div class="grid-x grid-padding-x">
-        <div class="row">
-            <nav>
-                <div class = "small-12 large-8 small-centered column web-title">
-                   <img  id = "logo" src = "assets/images/Nusic-Logo-Small.png">
-                </div>
-            </nav>
-        </div>
+    <div id = "content">
+        <nav>
+            <img  id = "logo" src = "assets/images/Nusic-Logo-Small.png">
+        </nav>
 
-        <div class="row">
-            <div class="small-12 medium-10 large-8 small-centered columns">
-                <div class="search-box small-centered">
+        <main>
+            <div class="search-box">
+                <p>
                     Search for Concerts in your Area
+                </p>
+                <div class="searchbox-flexrow">
                     <input class = "text-box" id = "search-box" type="text" placeholder = "City, ST">
-                    <button  id = "search-button">Search</button>
+                    <button  id = "search-button">🔍</button>    
                 </div>
             </div>
-        </div>
-        
-        <!--Results: Concerts-->
-        <div class="row" id="concertDiv" style="display:none">
-            <div class="small-12 medium-10 large-8 small-centered columns">
-                <div class = "box text-center" id = "concert-info">
-                    <!-- When jQuerying items into here, make the class "concert-content" -->
-                </div>
-            </div>
-        </div>
-
- <!-- Modal -->
- <div class="reveal box" id="concertInfoModal" data-reveal>
-        <!--Results: Playlist-->
-        <div class="row" id="concertMusicDiv">
             
+            <!--Results: Concerts-->
+            <div id="concertDiv" style="display:none">
+                <div class="small-12 medium-10 large-8 small-centered columns">
+                    <div class = "box text-center" id = "concert-info">
+                        <!-- When jQuerying items into here, make the class "concert-content" -->
+                    </div>
+                </div>
+            </div>
+    
+        </main>
+
+
+        <!-- Modal -->
+        <div id="concertInfoModal" data-reveal>
+            <!--Results: Playlist-->
+            <div class="row" id="concertMusicDiv">
+                
+            </div>
+            <button class="close-button" data-close aria-label="Close modal" type="button">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        
         </div>
-        <button class="close-button" data-close aria-label="Close modal" type="button">
-            <span aria-hidden="true">&times;</span>
-        </button>
-      
+
+        <footer>Contact: Mary Dang, Eric Chao, Kat Gordon, or Hunter Wilkins if this screws up</footer>
+
     </div>
 
-       
-    </div>
-
-    <footer>Contact: Mary Dang, Eric Chao, Kat Gordon, or Hunter Wilkins if this screws up</footer>
 
     <!--JavaScript////////////////////////////////////////////////////////-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>

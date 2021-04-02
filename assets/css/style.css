@@ -1,8 +1,17 @@
 * {
     transition:width .25s;
     outline:none;
+    box-sizing: border-box;
 }
 
+/* CSS VARIABLES (2021 Update)*/
+
+:root {
+    --custom-red: rgb(142, 34, 34);
+    --custom-purple: rgb(31, 12, 41);
+}
+
+/*=/=/=/=/=/=/=/=/=/=/=/=/=/*/
 
 /*Scrollbar*/
 
@@ -79,10 +88,22 @@ body {
     background-attachment:fixed;
     background-repeat:no-repeat;
     background-size:cover;
-    height:100%;
+    min-height: 100vh;
+    overflow-y: scroll;
+    margin: 0;
+    padding: 0;
+    
+    /*Flex Update - 2021*/
+    display: flex;
+    flex-direction: column;
+    /*=/=/=/=/=/=/=/=/=/=/=/=/*/
     
     color: rgb(236, 73, 73);
     z-index: 2;
+}
+
+main {
+    flex: 1;
 }
 
 .web-title h1{
@@ -118,12 +139,12 @@ a:hover{
 
 #concert-info{
     min-height:200px;
-    height: calc(100vh - 310px);
+    /* height: calc(100vh - 310px); */
     overflow-y:scroll;
 }
 
 .search-box {
-    background:linear-gradient(to bottom right, rgb(142, 34, 34), rgb(90, 32, 42), rgb(66, 23, 53));
+    background:var(--custom-purple);
     padding:15px;
     border-radius:8px;
     border:rgba(204, 65, 116, 0.53) solid;
@@ -140,11 +161,30 @@ a:hover{
     box-shadow:none;
 }
 
+.searchbox-flexrow {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    vertical-align: top;
+
+    height: 30px;
+}
+
+.searchbox-flexrow > * {
+    height: 100%;
+}
+
+.searchbox-flexrow > input {
+    flex: 1;
+}
+
+
+
 .text-box {
     background:linear-gradient(to bottom right, rgb(66, 23, 53), rgb(90, 32, 42), rgb(142, 34, 34));
     background-size:200%;
-    
-   
+    padding: 10px;
+    font-size: 16px;
     color:rgb(255, 131, 100);
     border:rgb(88, 33, 67) solid 2px;
     border-radius:3px;
@@ -171,17 +211,18 @@ a:hover{
 #search-button{
     background: radial-gradient(rgb(176, 50, 41), rgb(125, 35, 35));
     background-size:200%;
-    padding:10px;
-    width:50%;
-    margin:0 25% 0 25%;
+    padding: 0px;
+    /* width:50%; */
+    /* margin:0 25% 0 25%; */
     color: rgb(255, 218, 179);
     font-size:16px;
+    width: 50px;
     border-radius: 2px;
     border: inherit solid 2px;
-
+    border: none;
     box-shadow: 0 5px 5px rgba(34, 14, 41, 0.714);
 
-    transition: background .25s, box-shadow .25s, font-size .25s, padding .25s, color .25s;
+    transition: .25s;
 }
 
 #search-button:hover{
@@ -189,10 +230,18 @@ a:hover{
     background: radial-gradient(rgb(194, 50, 40), rgb(149, 36, 36));
     background-size:200%;
     color: rgb(255, 218, 179);
-    box-shadow:0 0 5px rgb(231, 55, 55);
+    box-shadow:0 0 5px rgb(231, 55, 55);    
 
-    font-size:18px;
+    transform: scale(1.2);
 
+}
+
+#concertInfoModal {
+    display: none;
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
 }
 
 .concert-div {
@@ -243,6 +292,12 @@ a:hover{
     border: inherit solid;
 }
 
+#content {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
 /* #concert-music-div .modal-content{
     width:100%;
     border:none;
@@ -291,11 +346,9 @@ footer {
     width:100%;
     background:rgb(59, 29, 45);
     color:rgb(255, 131, 100);
-    padding:5px;
+    padding:15px;
+    font-size: 18px;
     text-align:center;
-    position:fixed;
-    bottom:0;
-    left:0;
 }
 
 
