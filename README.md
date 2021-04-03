@@ -11,7 +11,8 @@ This is an app that allows the user to discover bands playing in their area and 
 - HTML & CSS
 - Javascript
 - [Bootstrap](https://getbootstrap.com/)
-- [Foundation](https://foundation.zurb.com/)
+- [Moment.js](https://momentjs.com/)
+<!-- - [Foundation](https://foundation.zurb.com/) -->
 - [jQuery](https://jquery.com/download/)
 
 ## Check Out our Creators' Other Projects At:
