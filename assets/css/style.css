@@ -197,7 +197,7 @@ a:hover{
 
     /* box-shadow: 0 0 5px rgb(255, 100, 53); */
 
-    transition: box-shadow .25s, opacity, .25s;
+    transition: .25s;
 }
 
 .search-box p {
@@ -443,7 +443,7 @@ footer {
     width:100%;
     background:rgb(59, 29, 45);
     color:rgb(255, 131, 100);
-    padding:15px;
+    padding:10px;
     font-size: 18px;
     text-align:center;
 }
