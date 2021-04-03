@@ -31,6 +31,13 @@ $(document).ready(function () {
 
     // Search button click event
     $("#search-button").on("click", function(event) {
+        const activatedStyle = {
+            "max-width" : "100%",
+            "border-bottom-right-radius": "0",
+            "border-bottom-left-radius": "0",
+            "border-bottom": "none"
+        }
+        $(".search-box").css(activatedStyle);
         searchLocation();
     });
 
@@ -237,7 +244,9 @@ $(document).ready(function () {
         // Create a p for the date
         var dateP = $("<p>");
         dateP.addClass("concert-text-date");
-        dateP.text(concert.dates.start.localDate);
+        // Prettying up date
+        var momentDate = moment(concert.dates.start.localDate).format("MMMM DD, YYYY");
+        dateP.text(momentDate);
         textDiv.append(dateP);
 
         // Append to the concert list container
