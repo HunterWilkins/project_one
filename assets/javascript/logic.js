@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    $(document).foundation();
+    // $(document).foundation();
 
     // Holds the list of concerts
     var concertList = [];
@@ -354,6 +354,8 @@ $(document).ready(function () {
         $("#concertMusicDiv").empty();
         getTracks($(this).attr("data-artistId"));
         addConcertToModal($(this).attr("data-index"));
+        // Toggle Modal Visibility
+        $("#concertInfoModal").css("display", "flex");
     })
 
     function getTracks(artistID) {
@@ -374,7 +376,7 @@ $(document).ready(function () {
                 // Create functions to hold album playlist
                 var newAlbumRow1 = $("<div class='row newAlbumRow'>");
                 var newAlbumCol1 = $("<div class='albumArtCol small-3 medium-3 large-3 columns'>");
-                var albumImg = $("<img src='"+albumArtwork+"' alt=\""+artistName+"\" style=\"display:block;margin:auto;margin:10%;\">");
+                var albumImg = $("<img src='"+albumArtwork+"' alt=\""+artistName+"\" style=\"display:block;\">");
                 newAlbumCol1.append(albumImg);
 
                 var newAlbumCol2 = $("<div class='albumInfo small-9 medium-9 large-9 columns' style='padding-left:0'>");
@@ -437,4 +439,8 @@ $(document).ready(function () {
             }
         });
     }
+
+    $("body #concertInfoModal").on("click", ":not(#concertMusicDiv, #concertMusicDiv *)", function() {
+        $("#concertInfoModal").css("display", "none");
+    })
 })

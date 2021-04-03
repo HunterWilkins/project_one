@@ -54,13 +54,37 @@
     }
 }
 
+@keyframes slide-in {
+    from {
+        opacity: 0;
+        transform: translateX(-100%);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0%);
+    }
+}
+
+@keyframes fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(-20%);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0%);
+    }
+}
+
 h5{
+    font-size: 18px;
     font-weight:bolder;
     color:rgb(236, 175, 84);
 
 }
 
 h4{
+    font-size: 20px;
     font-weight:bolder;
     color:rgb(255, 186, 112);
     text-decoration: underline;
@@ -79,7 +103,6 @@ hr {
 }
 
 html{
-    
     height:100%;
 }
 
@@ -103,7 +126,12 @@ body {
 }
 
 main {
+    /* display: flex;
+    flex-direction: column;
+    align-items: center; */
+    align-self: center;
     flex: 1;
+    width: 80%;
 }
 
 .web-title h1{
@@ -138,9 +166,18 @@ a:hover{
 }
 
 #concert-info{
+    animation: slide-in .15s ease-in;
     min-height:200px;
     /* height: calc(100vh - 310px); */
+    background: var(--custom-purple);
     overflow-y:scroll;
+    width: 100%;
+    display: flex;
+    padding: 15px;
+    flex-wrap: wrap;
+    /* flex-direction: column; */
+    align-items: center;
+    justify-content: center;
 }
 
 .search-box {
@@ -148,18 +185,24 @@ a:hover{
     padding:15px;
     border-radius:8px;
     border:rgba(204, 65, 116, 0.53) solid;
-    margin-bottom:15px;
-    
+    margin: 10px auto;
+    max-width: 500px;
     color: rgb(255, 184, 137);
 
-    box-shadow: 0 0 5px rgb(255, 100, 53);
+    /* box-shadow: 0 0 5px rgb(255, 100, 53); */
 
     transition: box-shadow .25s, opacity, .25s;
 }
 
-.search-box:hover{
-    box-shadow:none;
+.search-box p {
+    font-size: 24px;
+    padding: 5px;
+    margin: 0;
 }
+
+/* .search-box:hover{
+    box-shadow:none;
+} */
 
 .searchbox-flexrow {
     display: flex;
@@ -177,8 +220,6 @@ a:hover{
 .searchbox-flexrow > input {
     flex: 1;
 }
-
-
 
 .text-box {
     background:linear-gradient(to bottom right, rgb(66, 23, 53), rgb(90, 32, 42), rgb(142, 34, 34));
@@ -238,18 +279,37 @@ a:hover{
 
 #concertInfoModal {
     display: none;
-    display: flex;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.8);
+    overflow-y:scroll;
+    
     flex-direction: column;
 
     align-items: center;
 }
 
-.concert-div {
-    display: inline-block;
-    position: relative;
+#concertInfoModal .button {
     margin: 10px;
+    display: inline-block;
+}
+
+.concert-div {
+    /* display: inline-block; */
+    width: 250px;
+    position: relative;
+    margin: 5px;
     opacity:.7;
     transition: box-shadow .25s, opacity .25s;
+
+    animation: fade-in .25s ease-in;
+}
+
+.concert-div img {
+    max-width: 100%;
 }
 
 .concert-div:hover{
@@ -271,10 +331,13 @@ a:hover{
 
 .concert-info-div{
     text-align:center;
+    background: var(--custom-purple);
+    padding: 15px;
 }
 
 .concert-info-div h4{
     font-style:bolder;
+    font-size: 24px;
 }
 
 .concert-text-artist {
@@ -292,10 +355,29 @@ a:hover{
     border: inherit solid;
 }
 
+.newAlbumRow {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    background: var(--custom-purple);
+    padding: 15px;
+}
+
+.albumArtCol > img {
+    max-width: 100%;
+}
+
 #content {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
+}
+
+#concertMusicDiv {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 /* #concert-music-div .modal-content{
@@ -351,8 +433,18 @@ footer {
     text-align:center;
 }
 
+@media only screen and (max-width: 660px) {
+    main {
+        width: 80%;
+    }
 
-@media only screen and (max-width: 400px){
+    .search-box {
+        width: 100%;
+    }
+}
+
+
+@media only screen and (max-width: 450px){
     
     body {
         background-image: url("../images/Genesis-Background-Mobile.png");
@@ -365,29 +457,49 @@ footer {
         z-index: 2;    
     }
 
+    main {
+        width: 100%;
+    }
+
+    #logo {
+        width: 100%;
+    }
+
     .search-box{
         text-align:center;
         font-size: 20px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
     }
 
-    #concert-info{
-        height:300px;
-        overflow-y:scroll;
+    .search-box > p {
+        font-size: 20px;
     }
 
-    .reveal-overlay{
-        height:100%;
-        background:rgba(10, 10, 10, 0.80);
+    .searchbox-flexrow {
+        flex-wrap: wrap;
+        justify-content:center;
+        height: initial;
+    }
+
+    #search-button {
+        margin-top: 5px;
+        width: 100%;
+        padding: 5px 0;
+    }
+
+    #search-button:hover {
+        transform: none;
+    }
+
+    #search-box {
+        width: 100%;
     }
 
     .button{
         width: 100%;
-    }
-
-    .reveal{
-        
-        width:90%;
-      margin: 0 auto;
     }
 
 }

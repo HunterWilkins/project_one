@@ -21,9 +21,7 @@
 
         <main>
             <div class="search-box">
-                <p>
-                    Search for Concerts in your Area
-                </p>
+                <p>Search for Concerts in your Area</p>
                 <div class="searchbox-flexrow">
                     <input class = "text-box" id = "search-box" type="text" placeholder = "City, ST">
                     <button  id = "search-button">🔍</button>    
@@ -32,24 +30,21 @@
             
             <!--Results: Concerts-->
             <div id="concertDiv" style="display:none">
-                <div class="small-12 medium-10 large-8 small-centered columns">
-                    <div class = "box text-center" id = "concert-info">
-                        <!-- When jQuerying items into here, make the class "concert-content" -->
-                    </div>
+                <div id = "concert-info">
+                    <!-- When jQuerying items into here, make the class "concert-content" -->
                 </div>
             </div>
-    
         </main>
 
 
         <!-- Modal -->
-        <div id="concertInfoModal" data-reveal>
+        <div id="concertInfoModal">
             <!--Results: Playlist-->
-            <div class="row" id="concertMusicDiv">
+            <div  id="concertMusicDiv">
                 
             </div>
-            <button class="close-button" data-close aria-label="Close modal" type="button">
-                <span aria-hidden="true">&times;</span>
+            <button class="close-button" aria-label="Close modal">
+                <span>&times;</span>
             </button>
         
         </div>
