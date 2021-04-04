@@ -1,10 +1,10 @@
 # Nusic
 
 ## Project Purpose 
-This is an app that allows the user to discover bands playing in their area and also to listen to that band's latest album and top hits.
+Discover bands playing in your area and find that band's latest album and top hits in an instant!
 
 ## Getting Started
-<img src='assets/images/FinalProduct.png'><br>
+<img src='assets/images/nusic-revamped.gif'><br>
 [Click here to check out the app!](https://hunterwilkins.github.io/project_one/)
 
 ## Built With
@@ -12,7 +12,6 @@ This is an app that allows the user to discover bands playing in their area and 
 - Javascript
 - [Bootstrap](https://getbootstrap.com/)
 - [Moment.js](https://momentjs.com/)
-<!-- - [Foundation](https://foundation.zurb.com/) -->
 - [jQuery](https://jquery.com/download/)
 
 ## Check Out our Creators' Other Projects At:
