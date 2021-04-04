@@ -31,6 +31,7 @@ $(document).ready(function () {
 
     // Search button click event
     $("#search-button").on("click", function(event) {
+        event.preventDefault();
         const activatedStyle = {
             "max-width" : "100%",
             "border-bottom-right-radius": "0",
@@ -291,11 +292,14 @@ $(document).ready(function () {
                         }
                     }
                 } catch(err) {
+                    return;
                 // No URLs for this artist
                 }
 
                 // iTunes artist ID was not found, search by MusicBrainz artist name
                 searchITunesByName(concertInfo, response.name);
+                return;
+            }).catch(err => {
                 return;
             });
         });

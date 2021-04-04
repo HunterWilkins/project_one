@@ -9,6 +9,7 @@
 :root {
     --custom-red: rgb(142, 34, 34);
     --custom-purple: rgb(31, 12, 41);
+    --custom-text-color: rgb(255, 186, 112);
 }
 
 /*=/=/=/=/=/=/=/=/=/=/=/=/=/*/
@@ -386,6 +387,7 @@ a:hover{
     display: flex;
     flex-direction: column;
     align-items: center;
+    color: var(--custom-text-color);
 }
 
 /* #concert-music-div .modal-content{
