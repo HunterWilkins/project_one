@@ -10,7 +10,6 @@ Discover bands playing in your area and find that band's latest album and top hi
 ## Built With
 - HTML & CSS
 - Javascript
-- [Bootstrap](https://getbootstrap.com/)
 - [Moment.js](https://momentjs.com/)
 - [jQuery](https://jquery.com/download/)
 
